@@ -98,6 +98,11 @@ public class BgReading extends Model {
     @Column(name = "sensor_uuid", index = true)
     public String sensor_uuid;
 
+    @Expose
+    @Column(name = "wixel_battery_level")
+    public int wixel_battery_level;
+
+
     @Column(name = "snyced")
     public boolean synced;
 
@@ -162,6 +167,8 @@ public class BgReading extends Model {
                 bgReading.uuid = UUID.randomUUID().toString();
                 bgReading.time_since_sensor_started = bgReading.timestamp - sensor.started_at;
                 bgReading.synced = false;
+                bgReading.wixel_battery_level = sensor.wixel_battery_level;
+
 
                 //TODO: THIS IS A BIG SILLY IDEA, THIS WILL HAVE TO CHANGE ONCE WE GET SOME REAL DATA FROM THE START OF SENSOR LIFE
                 double adjust_for = (86400000 * 1.8) - bgReading.time_since_sensor_started;
@@ -185,6 +192,7 @@ public class BgReading extends Model {
                 bgReading.uuid = UUID.randomUUID().toString();
                 bgReading.time_since_sensor_started = bgReading.timestamp - sensor.started_at;
                 bgReading.synced = false;
+                bgReading.wixel_battery_level = sensor.wixel_battery_level;
 
                 //TODO: THIS IS A BIG SILLY IDEA, THIS WILL HAVE TO CHANGE ONCE WE GET SOME REAL DATA FROM THE START OF SENSOR LIFE
                 double adjust_for = (86400000 * 1.9) - bgReading.time_since_sensor_started;

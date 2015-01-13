@@ -46,8 +46,8 @@ public class SensorDataTable extends ListActivity implements NavigationDrawerFra
         SimpleCursorAdapter adapter = new SimpleCursorAdapter(this,
                 R.layout.raw_data_list_item,
                 cursor,
-                new String[] { "started_at", "latest_battery_level", "uuid", "uuid" },
-                new int[] { R.id.raw_data_id, R.id.raw_data_value , R.id.raw_data_slope, R.id.raw_data_timestamp });
+                new String[] { "started_at", "latest_battery_level", "uuid", "uuid" , "wixel_battery_level"},
+                new int[] { R.id.raw_data_id, R.id.raw_data_value , R.id.raw_data_slope, R.id.raw_data_timestamp, R.id.raw_data_value });
 
         this.setListAdapter(adapter);
 //        ListView listView = (ListView) findViewById(R.id.list);

@@ -12,7 +12,7 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.widget.DrawerLayout;
 import android.widget.TextView;
-
+import android.util.Log;
 import com.eveningoutpost.dexdrip.Models.ActiveBluetoothDevice;
 import com.eveningoutpost.dexdrip.Models.BgReading;
 import com.eveningoutpost.dexdrip.Models.Calibration;
@@ -170,6 +170,7 @@ public class Home extends Activity implements NavigationDrawerFragment.Navigatio
 
     public void updateCurrentBgInfo() {
         final TextView currentBgValueText = (TextView) findViewById(R.id.currentBgValueRealTime);
+        final TextView currentWixelBatteryText = (TextView) findViewById(R.id.currentWixelBattery);
         final TextView notificationText = (TextView)findViewById(R.id.notices);
         notificationText.setText("");
         boolean isBTWixel = CollectionServiceStarter.isBTWixel(getApplicationContext());
@@ -177,6 +178,7 @@ public class Home extends Activity implements NavigationDrawerFragment.Navigatio
             (!isBTWixel && WixelReader.IsConfigured(getApplicationContext()))) {
             if (Sensor.isActive() && (Sensor.currentSensor().started_at + (60000 * 60 * 2)) < new Date().getTime()) {
                 if (BgReading.latest(2).size() > 1) {
+
                     List<Calibration> calibrations = Calibration.latest(2);
                     if (calibrations.size() > 1) {
                         if (calibrations.get(0).slope <= 0.5 || calibrations.get(0).slope >= 1.4) {
@@ -200,10 +202,10 @@ public class Home extends Activity implements NavigationDrawerFragment.Navigatio
                 if((android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.JELLY_BEAN_MR2)) {
                     notificationText.setText("First pair with your BT device");
                 } else {
-                    notificationText.setText("Your device has to be android 4.3 and up to support Bluetooth wixel");
+                    notificationText.setText("Your device has to be android 4.3 and up to support Bluetooth Wixel");
                 }
             } else {
-                notificationText.setText("First configure your wifi wixel reader ip addresses");
+                notificationText.setText("First configure your wifi Wixel reader ip addresses");
             }
         }
         mNavigationDrawerFragment = (NavigationDrawerFragment) getFragmentManager().findFragmentById(R.id.navigation_drawer);
@@ -216,11 +218,13 @@ public class Home extends Activity implements NavigationDrawerFragment.Navigatio
 
         final TextView currentBgValueText = (TextView)findViewById(R.id.currentBgValueRealTime);
         final TextView notificationText = (TextView)findViewById(R.id.notices);
+        final TextView currentWixelBatteryText = (TextView) findViewById(R.id.currentWixelBattery);
         if ((currentBgValueText.getPaintFlags() & Paint.STRIKE_THRU_TEXT_FLAG) > 0) {
             currentBgValueText.setPaintFlags(currentBgValueText.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
         }
         BgReading lastBgreading = BgReading.lastNoSenssor();
-
+        currentWixelBatteryText.setText("DexDrip Battery: " + Math.round(((float) lastBgreading.wixel_battery_level - 3040)/260*100) + "%");
+        Log.d("Wix Batt:", Integer.toString(lastBgreading.wixel_battery_level));
         if (lastBgreading != null) {
             double estimate = 0;
             if ((new Date().getTime()) - (60000 * 11) - lastBgreading.timestamp > 0) {
@@ -228,6 +232,7 @@ public class Home extends Activity implements NavigationDrawerFragment.Navigatio
                 estimate = BgReading.estimated_bg(lastBgreading.timestamp + (6000 * 7));
                 currentBgValueText.setText(bgGraphBuilder.unitized_string(BgReading.activePrediction()));
                 currentBgValueText.setPaintFlags(currentBgValueText.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+                //TODO: change this to invisible when dex is our of range
             } else {
                 if (lastBgreading != null) {
                     estimate = BgReading.activePrediction();

@@ -58,6 +58,23 @@
                     android:paddingEnd="20dp"
                     android:textSize="50dp"
                     android:paddingTop="0dp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="#07000000"
+                    android:id="@+id/currentWixelBattery"
+                    android:gravity="right"
+                    android:paddingEnd="0dp"
+                    android:textSize="12dp"
+                    android:paddingTop="0dp"
+                    android:layout_alignParentTop="false"
+                    android:textStyle="bold"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentBottom="false"
+                    android:layout_alignStart="@+id/currentBgValueRealTime"
+                    android:layout_alignParentLeft="false" />
+
             </RelativeLayout>
 
             <lecho.lib.hellocharts.view.PreviewLineChartView
