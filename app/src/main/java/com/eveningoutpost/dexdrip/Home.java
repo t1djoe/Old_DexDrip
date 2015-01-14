@@ -223,7 +223,11 @@ public class Home extends Activity implements NavigationDrawerFragment.Navigatio
             currentBgValueText.setPaintFlags(currentBgValueText.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
         }
         BgReading lastBgreading = BgReading.lastNoSenssor();
-        currentWixelBatteryText.setText("DexDrip Battery: " + Math.round(((float) lastBgreading.wixel_battery_level - 3040)/260*100) + "%");
+        if (Math.round(((float) lastBgreading.wixel_battery_level - 3040)/260*100) > 0){
+            currentWixelBatteryText.setText("Bridge Power: " + Math.round(((float) lastBgreading.wixel_battery_level - 3040)/260*100) + "%");}
+        else{
+            currentWixelBatteryText.setText("Bridge Power: 0%");
+        }
         Log.d("Wix Batt:", Integer.toString(lastBgreading.wixel_battery_level));
         if (lastBgreading != null) {
             double estimate = 0;
