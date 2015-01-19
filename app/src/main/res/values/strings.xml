@@ -3,7 +3,7 @@
 
     <string name="pref_I_understand_title"> I UNDERSTAND AND AGREE</string>
     <string name="pref_I_understand_summery">DexDrip MUST NOT BE USED TO MAKE MEDICAL DECISIONS. THERE IS NO WARRANTY FOR THE PROGRAM, TO THE EXTENT PERMITTED BY APPLICABLE LAW. EXCEPT WHEN OTHERWISE STATED IN WRITING THE COPYRIGHT HOLDERS AND/OR OTHER PARTIES PROVIDE THE PROGRAM “AS IS” WITHOUT WARRANTY OF ANY KIND, EITHER EXPRESSED OR IMPLIED, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE. THE ENTIRE RISK AS TO THE QUALITY AND PERFORMANCE OF THE PROGRAM IS WITH YOU. SHOULD THE PROGRAM PROVE DEFECTIVE, YOU ASSUME THE COST OF ALL NECESSARY SERVICING, REPAIR OR CORRECTION. </string>
-    <string name="app_name">DexDrip</string>
+    <string name="app_name">DIYPanc</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
     <string name="title_activity_bluetooth_scan">BluetoothScan</string>
@@ -33,7 +33,7 @@
     <string name="action_example">Example action</string>
 
     <string-array name="menu_options">
-        <item>Dex Drip</item>
+        <item>DIYPanc</item>
         <item>Enter Calibration</item>
         <item>Calculated Data Table</item>
         <item>Raw Data Table</item>
@@ -79,5 +79,14 @@
     <!-- wifi Settings -->
     <string name="wifi_recievers_dialog_title">Enter ip addresses and ports of receivers</string>
     <string name="wifi_recievers_dialog_message">Comma separated list of ip:port (for example 37.142.132.220:50005,37.142.132.220:50006)</string>
+
+    <string name="sel_eating_time">Time in minutes</string>
+    <string-array name="eating_time_array">
+        <item>Now</item>
+        <item>15 Minutes</item>
+        <item>30 Minutes</item>
+        <item>45 Minutes</item>
+        <item>60 Minutes</item>
+    </string-array>
 
 </resources>

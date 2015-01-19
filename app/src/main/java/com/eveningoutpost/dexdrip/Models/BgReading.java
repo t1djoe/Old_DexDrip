@@ -103,7 +103,7 @@ public class BgReading extends Model {
     public int wixel_battery_level;
 
 
-    @Column(name = "snyced")
+    @Column(name = "synced")
     public boolean synced;
 
     public double calculated_value_mmol() {

@@ -9,6 +9,8 @@ import com.eveningoutpost.dexdrip.Models.BgReading;
 import com.eveningoutpost.dexdrip.Models.Calibration;
 import com.eveningoutpost.dexdrip.Tables.BgReadingTable;
 import com.eveningoutpost.dexdrip.Tables.CalibrationDataTable;
+import com.eveningoutpost.dexdrip.Tables.TreatmentDataTable;
+import com.eveningoutpost.dexdrip.Tables.SensorDataTable;
 import com.eveningoutpost.dexdrip.UtilityModels.CollectionServiceStarter;
 
 import java.util.ArrayList;
@@ -26,21 +28,22 @@ public class NavDrawerBuilder {
     public final double time_now = new Date().getTime();
 
     public final List<String> nav_drawer_options(Context context) {
-        List<String> options = new ArrayList<String>();
+        List<String> options = new ArrayList<>();
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
         boolean IUnderstand = prefs.getBoolean("I_understand", false);
-        if(IUnderstand == false) {
+        if(!IUnderstand) {
             options.add("Settings");
             return options;
         }
 
-        options.add("DexDrip");
+        options.add("DIYPanc");
         if(is_active_sensor) {
             options.add("Calibration Graph");
         }
         options.add("BG Data Table");
         options.add("Calibration Data Table");
-//        options.add("Sensor Data Table");
+        options.add("Treatment Data Table");
+        options.add("Sensor Data Table");
 
         if(is_active_sensor) {
             if(last_two_bgReadings.size() > 1) {
@@ -66,10 +69,10 @@ public class NavDrawerBuilder {
     }
 
     public final List<Intent> nav_drawer_intents(Context context) {
-        List<Intent> options = new ArrayList<Intent>();
+        List<Intent> options = new ArrayList<>();
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
         boolean IUnderstand = prefs.getBoolean("I_understand", false);
-        if(IUnderstand == false) {
+        if(!IUnderstand) {
             options.add(new Intent(context, SettingsActivity.class));
             return options;
         }
@@ -80,7 +83,8 @@ public class NavDrawerBuilder {
         }
         options.add(new Intent(context, BgReadingTable.class));
         options.add(new Intent(context, CalibrationDataTable.class));
-//        options.add(new Intent(context, SensorDataTable.class));
+        options.add(new Intent(context, TreatmentDataTable.class));
+        options.add(new Intent(context, SensorDataTable.class));
 
 
         if(is_active_sensor) {

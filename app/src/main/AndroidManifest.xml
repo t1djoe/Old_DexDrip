@@ -43,6 +43,10 @@
             </intent-filter>
         </activity>
         <activity
+            android:name=".AddTreatment"
+            android:label="Add Treatment" >
+        </activity>
+        <activity
             android:name=".BluetoothScan"
             android:label="@string/title_activity_bluetooth_scan" >
         </activity>
@@ -60,6 +64,10 @@
         <activity
             android:name=".Tables.SensorDataTable"
             android:label="Sensor Table" >
+        </activity>
+        <activity
+            android:name=".Tables.TreatmentDataTable"
+            android:label="Treatment Table" >
         </activity>
         <activity
             android:name=".AddCalibration"

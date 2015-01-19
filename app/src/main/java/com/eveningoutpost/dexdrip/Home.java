@@ -13,6 +13,7 @@ import android.preference.PreferenceManager;
 import android.support.v4.widget.DrawerLayout;
 import android.widget.TextView;
 import android.util.Log;
+import android.view.View;
 import com.eveningoutpost.dexdrip.Models.ActiveBluetoothDevice;
 import com.eveningoutpost.dexdrip.Models.BgReading;
 import com.eveningoutpost.dexdrip.Models.Calibration;
@@ -32,17 +33,13 @@ import lecho.lib.hellocharts.view.PreviewLineChartView;
 
 
 public class Home extends Activity implements NavigationDrawerFragment.NavigationDrawerCallbacks {
-    private String menu_name = "DexDrip";
+    private String menu_name = "DIYPanc";
     private NavigationDrawerFragment mNavigationDrawerFragment;
     private LineChartView chart;
     private PreviewLineChartView previewChart;
     SharedPreferences prefs;
     Viewport tempViewport = new Viewport();
     Viewport holdViewport = new Viewport();
-    public float left;
-    public float right;
-    public float top;
-    public float bottom;
     public boolean updateStuff;
     public boolean updatingPreviewViewport = false;
     public boolean updatingChartViewport = false;
@@ -141,7 +138,7 @@ public class Home extends Activity implements NavigationDrawerFragment.Navigatio
                 tempViewport = newViewport;
                 updatingPreviewViewport = false;
             }
-            if (updateStuff == true) {
+            if (updateStuff) {
                 holdViewport.set(newViewport.left, newViewport.top, newViewport.right, newViewport.bottom);
             }
         }
@@ -210,6 +207,12 @@ public class Home extends Activity implements NavigationDrawerFragment.Navigatio
         }
         mNavigationDrawerFragment = (NavigationDrawerFragment) getFragmentManager().findFragmentById(R.id.navigation_drawer);
         mNavigationDrawerFragment.setUp(R.id.navigation_drawer, (DrawerLayout) findViewById(R.id.drawer_layout), menu_name, this);
+    }
+
+    public void addTreatment(View view) {
+        Log.w("Adding treatment", "MESSAGE");
+        Intent myIntent = new Intent(this, AddTreatment.class);
+        startActivity(myIntent);
     }
 
     public void displayCurrentInfo() {

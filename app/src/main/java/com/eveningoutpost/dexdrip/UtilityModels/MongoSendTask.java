@@ -6,6 +6,7 @@ import android.util.Log;
 
 import com.eveningoutpost.dexdrip.Models.BgReading;
 import com.eveningoutpost.dexdrip.Models.Calibration;
+import com.eveningoutpost.dexdrip.Models.Treatments;
 import com.eveningoutpost.dexdrip.Services.SyncService;
 
 import java.util.ArrayList;
@@ -18,6 +19,7 @@ public class MongoSendTask extends AsyncTask<String, Void, SyncService> {
         private Context context;
         public List<BgSendQueue> bgsQueue = new ArrayList<BgSendQueue>();
         public List<CalibrationSendQueue> calibrationsQueue = new ArrayList<CalibrationSendQueue>();
+        public List<TreatmentSendQueue> treatmentsQueue = new ArrayList<TreatmentSendQueue>();
 
         private Exception exception;
 
@@ -27,6 +29,10 @@ public class MongoSendTask extends AsyncTask<String, Void, SyncService> {
         }
         public MongoSendTask(Context pContext, CalibrationSendQueue calibrationSendQueue) {
             calibrationsQueue.add(calibrationSendQueue);
+            context = pContext;
+        }
+        public MongoSendTask(Context pContext, TreatmentSendQueue treatmentSendQueue) {
+            treatmentsQueue.add(treatmentSendQueue);
             context = pContext;
         }
         public MongoSendTask(Context pContext) {
@@ -39,6 +45,7 @@ public class MongoSendTask extends AsyncTask<String, Void, SyncService> {
             try {
                 List<BgReading> bgReadings = new ArrayList<BgReading>();
                 List<Calibration> calibrations = new ArrayList<Calibration>();
+                List<Treatments> treatments = new ArrayList<Treatments>();
                 for (CalibrationSendQueue job : calibrationsQueue) {
                     calibrations.add(job.calibration);
                 }

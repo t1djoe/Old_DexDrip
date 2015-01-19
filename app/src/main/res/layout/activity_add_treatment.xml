@@ -5,11 +5,21 @@
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
-    android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    tools:context="com.eveningoutpost.dexdrip.AddCalibration">
+    android:layout_height="match_parent" android:paddingLeft="16dp"
+    android:paddingRight="16dp"
+    android:paddingTop="16dp"
+    android:paddingBottom="16dp"
+    tools:context="com.eveningoutpost.dexdrip.AddTreatment">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="start|top"
+        android:layout_alignParentTop="true"
+        android:textAlignment="center"
+        android:textSize="24sp"
+        android:text="Add Treatment"
+        android:layout_centerHorizontal="true"/>
 
     <EditText
         android:layout_width="wrap_content"
@@ -21,11 +31,95 @@
         android:text=""
         android:singleLine="true"
         android:textAlignment="center"
-        android:textSize="24dp"
+        android:textSize="24sp"
         android:hint="Enter BG Value"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="41dp" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="numberDecimal"
+        android:ems="10"
+        android:id="@+id/carb_grams"
+        android:autoText="false"
+        android:text=""
+        android:singleLine="true"
+        android:textAlignment="center"
+        android:textSize="24sp"
+        android:hint="Enter Carbs in Grams"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="101dp" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="numberDecimal"
+        android:ems="10"
+        android:id="@+id/insulin_units"
+        android:autoText="false"
+        android:text=""
+        android:singleLine="true"
+        android:textAlignment="center"
+        android:textSize="24sp"
+        android:hint="Enter Insulin in Units"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="161dp" />
+
+
+    <Spinner
+        android:id="@+id/eating_time_spinner"
+        android:layout_marginTop="221dp"
+        android:layout_alignStart="@+id/insulin_units"
+        android:layout_alignEnd="@+id/insulin_units"
+        android:entries="@array/eating_time_array"
+        android:prompt="@string/sel_eating_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <RadioGroup
+        android:id="@+id/radioTime"
+        android:layout_marginTop="281dp"
+        android:layout_centerHorizontal="true"
+        android:orientation="horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" >
+
+        <RadioButton
+            android:id="@+id/radioNow"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignStart="@+id/insulin_units"
+            android:text="Now"
+            android:checked="true" />
+
+        <RadioButton
+            android:id="@+id/radioOther"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignEnd="@+id/insulin_units"
+            android:text="Other" />
+
+    </RadioGroup>
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="numberDecimal"
+        android:ems="10"
+        android:id="@+id/event_time"
+        android:autoText="false"
+        android:text=""
+        android:singleLine="true"
+        android:textAlignment="center"
+        android:textSize="24sp"
+        android:hint="Event time hh:mm  "
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="311dp" />
 
     <Button
         android:layout_width="wrap_content"
@@ -34,7 +128,7 @@
         android:id="@+id/save_treatment_button"
         android:layout_below="@+id/bg_value"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="53dp" />
+        android:layout_marginTop="301dp" />
 
 </RelativeLayout>
 <fragment android:id="@+id/navigation_drawer"
@@ -43,5 +137,5 @@ android:layout_gravity="start"
 android:name="com.eveningoutpost.dexdrip.NavigationDrawerFragment"
 tools:layout="@layout/fragment_navigation_drawer" />
 
-    </android.support.v4.widget.DrawerLayout>
+</android.support.v4.widget.DrawerLayout>
 
