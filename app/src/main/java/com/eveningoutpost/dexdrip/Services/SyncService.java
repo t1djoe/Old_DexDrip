@@ -54,7 +54,7 @@ public class SyncService extends Service {
         enableMongoUpload = prefs.getBoolean("cloud_storage_mongodb_enable", false);
 
         if (enableRESTUpload || enableMongoUpload) {
-            syncToMogoDb();
+            syncToMongoDb();
         }
         if (false) {
             for (SensorSendQueue job : SensorSendQueue.queue()) {
@@ -66,6 +66,9 @@ public class SyncService extends Service {
             for (BgSendQueue job : BgSendQueue.queue()) {
                 RestCalls.sendBgReading(job);
             }
+            for (TreatmentSendQueue job : TreatmentSendQueue.queue()) {
+                RestCalls.sendTreatment(job);
+            }
         }
     }
 
@@ -75,7 +78,7 @@ public class SyncService extends Service {
         alarm.set(alarm.RTC_WAKEUP, calendar.getTimeInMillis() + (1000 * 60 * 5), PendingIntent.getService(this, 0, new Intent(this, SyncService.class), 0));
     }
 
-    public void syncToMogoDb() {
+    public void syncToMongoDb() {
         MongoSendTask task = new MongoSendTask(getApplicationContext());
         task.execute();
     }
