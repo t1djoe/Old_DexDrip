@@ -123,6 +123,27 @@ public class RestCalls {
         );
     }
 
+    public static void sendTreatment(final TreatmentSendQueue treatmentSendQueue) {
+        User user = User.currentUser();
+        TreatmentInterface().createReading(user.uuid, TreatmentSendQueue.treatment, new Callback<Gson>() {
+                    @Override
+                    public void success(Gson gsonResponse, Response response) {
+                        treatmentSendQueue.success = true;
+                        treatmentSendQueue.save();
+                        Treatments treatment = treatmentSendQueue.treatment;
+                        treatment.save();
+                    }
+                    @Override
+                    public void failure(RetrofitError error) {
+                        Response response = error.getResponse();
+                        Log.w("REST CALL ERROR:", "****************");
+                        Log.w("REST CALL STATUS:", "" + response.getStatus());
+                        Log.w("REST CALL REASON:", response.getReason());
+                    }
+                }
+        );
+    }
+
     public static BgReadingInterface bgReadingInterface() {
         RestAdapter adapter = adapterBuilder().build();
             BgReadingInterface bgReadingInterface =
@@ -145,6 +166,12 @@ public class RestCalls {
         return calibrationInterface;
     }
 
+    public static TreatmentInterface treatmentInterface() {
+        RestAdapter adapter = adapterBuilder().build();
+        TreatmentInterface treatmentInterface =
+                adapter.create(TreatmentInterface.class);
+        return calibrationInterface;
+    }
     public static RestAdapter.Builder adapterBuilder() {
         RestAdapter.Builder adapterBuilder = new RestAdapter.Builder();
         adapterBuilder
