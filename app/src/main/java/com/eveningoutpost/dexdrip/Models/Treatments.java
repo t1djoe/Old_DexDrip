@@ -54,19 +54,8 @@ public class Treatments extends Model {
         treatment.eating_time = eatTime;
         treatment.treatment_time = treatTime;
 
-        TreatmentSendQueue.addToQueue(treatment, "update", context);
+        TreatmentSendQueue.addToQueue(treatment, "create", context);
         return(treatment);
-    }
-
-    public static List<Treatments> latest(int number) {
-        Sensor sensor = Sensor.currentSensor();
-        if (sensor == null) { return null; }
-        return new Select()
-                .from(Treatments.class)
-                .where("Sensor = ? ", sensor.getId())
-                .orderBy("_ID desc")
-                .limit(number)
-                .execute();
     }
 
 }

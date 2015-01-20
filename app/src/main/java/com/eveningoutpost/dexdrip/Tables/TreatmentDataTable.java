@@ -4,6 +4,7 @@ import android.app.ListActivity;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
+import android.util.Log;
 import android.view.View;
 import android.widget.SimpleCursorAdapter;
 
@@ -17,9 +18,6 @@ import java.util.ArrayList;
 public class TreatmentDataTable extends ListActivity implements NavigationDrawerFragment.NavigationDrawerCallbacks {
     private String menu_name = "Treatment Data Table";
     private NavigationDrawerFragment mNavigationDrawerFragment;
-
-    private ArrayList<String> results = new ArrayList<String>();
-    private View mRootView;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -41,18 +39,17 @@ public class TreatmentDataTable extends ListActivity implements NavigationDrawer
     }
 
     private void getData() {
-        Cursor cursor = Cache.openDatabase().rawQuery("Select * from Treatments order by _ID desc", null);
-
+        //Cursor cursor = Cache.openDatabase().rawQuery("Select * from Treatments order by treatment_time desc", null);
+        Log.w("Cursor cursro", "MESSAGE");
+        Cursor cursor = Cache.openDatabase().rawQuery("Select * from Treatments", null);
+        Log.w("adapter", "MESSAGE");
         SimpleCursorAdapter adapter = new SimpleCursorAdapter(this,
                 R.layout.treatment_data_list_item,
                 cursor,
                 new String[] { "bg", "carbs", "insulin", "eating_time", "treatment_time" },
                 new int[] { R.id.bg, R.id.carbs , R.id.insulin, R.id.eating_time, R.id.treatment_time });
-
+        Log.w("this", "MESSAGE");
         this.setListAdapter(adapter);
-//        ListView listView = (ListView) findViewById(R.id.list);
-//        listView.setAdapter(adapter);
     }
-
 
 }

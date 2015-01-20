@@ -128,6 +128,7 @@ public class AddTreatment extends Activity implements NavigationDrawerFragment.N
                     Log.w("timeValue = " + time_string_value, "MESSAGE");
                     SimpleDateFormat dateFormat = new SimpleDateFormat("h:mm a");
                     Date convertedDate = new Date();
+                    Log.w("convertedDate = " + convertedDate, "MESSAGE");
                     try {
                         convertedDate = dateFormat.parse(time_string_value);
                     } catch (java.text.ParseException e) {
@@ -141,9 +142,11 @@ public class AddTreatment extends Activity implements NavigationDrawerFragment.N
                 }
 
                 Treatments treatment = Treatments.create(bgValue, carbValue, insulinValue, spinnerDouble, treatmentTime, getApplicationContext());
-
+                Log.w("Treatments treatment", "MESSAGE");
                 Intent tableIntent = new Intent(v.getContext(), Home.class);
+                Log.w("Intent tableintent", "MESSAGE");
                 startActivity(tableIntent);
+                finish();
             }
         });
 
