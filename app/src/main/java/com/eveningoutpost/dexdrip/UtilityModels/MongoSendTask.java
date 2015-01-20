@@ -55,7 +55,7 @@ public class MongoSendTask extends AsyncTask<String, Void, SyncService> {
 
                 if(bgReadings.size() + calibrations.size() > 0) {
                     NightscoutUploader uploader = new NightscoutUploader(context);
-                    boolean uploadStatus = uploader.upload(bgReadings, calibrations, calibrations);
+                    boolean uploadStatus = uploader.upload(bgReadings, calibrations, calibrations, treatments);
                     if (uploadStatus) {
                         for (CalibrationSendQueue calibration : calibrationsQueue) {
                             calibration.markMongoSuccess();
