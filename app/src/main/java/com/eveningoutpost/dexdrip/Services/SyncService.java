@@ -10,18 +10,14 @@ import android.os.IBinder;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
-import com.eveningoutpost.dexdrip.Models.BgReading;
-import com.eveningoutpost.dexdrip.Models.Calibration;
 import com.eveningoutpost.dexdrip.UtilityModels.BgSendQueue;
 import com.eveningoutpost.dexdrip.UtilityModels.CalibrationSendQueue;
 import com.eveningoutpost.dexdrip.UtilityModels.MongoSendTask;
-import com.eveningoutpost.dexdrip.UtilityModels.NightscoutUploader;
 import com.eveningoutpost.dexdrip.UtilityModels.RestCalls;
 import com.eveningoutpost.dexdrip.UtilityModels.SensorSendQueue;
+import com.eveningoutpost.dexdrip.UtilityModels.TreatmentSendQueue;
 
-import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.List;
 
 public class SyncService extends Service {
     int mStartMode;

@@ -34,7 +34,7 @@ public class TreatmentSendQueue extends Model {
     public String operation_type;
 
     public static TreatmentSendQueue nextTreatmentJob() {
-        return new Select()
+        return  new Select()
                 .from(TreatmentSendQueue.class)
                 .where("success = ?", false)
                 .orderBy("_ID desc")

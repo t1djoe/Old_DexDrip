@@ -5,8 +5,10 @@ import android.util.Log;
 import com.eveningoutpost.dexdrip.Interfaces.BgReadingInterface;
 import com.eveningoutpost.dexdrip.Interfaces.CalibrationInterface;
 import com.eveningoutpost.dexdrip.Interfaces.SensorInterface;
+import com.eveningoutpost.dexdrip.Interfaces.TreatmentInterface;
 import com.eveningoutpost.dexdrip.Models.BgReading;
 import com.eveningoutpost.dexdrip.Models.Calibration;
+import com.eveningoutpost.dexdrip.Models.Treatments;
 import com.eveningoutpost.dexdrip.Sensor;
 import com.eveningoutpost.dexdrip.Models.User;
 import com.google.gson.Gson;
@@ -125,7 +127,7 @@ public class RestCalls {
 
     public static void sendTreatment(final TreatmentSendQueue treatmentSendQueue) {
         User user = User.currentUser();
-        TreatmentInterface().createReading(user.uuid, TreatmentSendQueue.treatment, new Callback<Gson>() {
+        treatmentInterface().createReading(user.uuid, treatmentSendQueue.treatment, new Callback<Gson>() {
                     @Override
                     public void success(Gson gsonResponse, Response response) {
                         treatmentSendQueue.success = true;
@@ -170,7 +172,7 @@ public class RestCalls {
         RestAdapter adapter = adapterBuilder().build();
         TreatmentInterface treatmentInterface =
                 adapter.create(TreatmentInterface.class);
-        return calibrationInterface;
+        return treatmentInterface;
     }
     public static RestAdapter.Builder adapterBuilder() {
         RestAdapter.Builder adapterBuilder = new RestAdapter.Builder();
