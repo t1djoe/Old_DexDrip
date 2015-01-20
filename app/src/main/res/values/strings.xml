@@ -88,5 +88,19 @@
         <item>45 Minutes</item>
         <item>60 Minutes</item>
     </string-array>
-
+    
+    <string name="sel_event_type">Event type</string>
+    <string-array name="event_type_array">
+        <item>BG Check</item>
+        <item>Snack Bolus</item>
+        <item>Meal Bolus</item>
+        <item>Correction Bolus</item>
+        <item>Carb Correction</item>
+        <item>Note</item>
+        <item>Question</item>
+        <item>Exercise</item>
+        <item>Pump Site Change</item>
+        <item>Dexcom Sensor Start</item>
+        <item>D.A.D. Alert</item>
+    </string-array>
 </resources>
