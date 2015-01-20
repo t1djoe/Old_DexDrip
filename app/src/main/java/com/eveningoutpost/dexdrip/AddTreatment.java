@@ -2,7 +2,6 @@ package com.eveningoutpost.dexdrip;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.net.ParseException;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
 import android.text.TextUtils;
@@ -17,13 +16,11 @@ import android.widget.Spinner;
 import com.eveningoutpost.dexdrip.Models.Treatments;
 
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
 
 
 public class AddTreatment extends Activity implements NavigationDrawerFragment.NavigationDrawerCallbacks {
-    Button button;
-    private String menu_name = "Add Treatment";
+    private Button button;
     private NavigationDrawerFragment mNavigationDrawerFragment;
     private RadioGroup radioTimeGroup;
     private RadioButton radioTimeButton;
@@ -38,6 +35,7 @@ public class AddTreatment extends Activity implements NavigationDrawerFragment.N
     protected void onResume() {
         super.onResume();
         mNavigationDrawerFragment = (NavigationDrawerFragment) getFragmentManager().findFragmentById(R.id.navigation_drawer);
+        String menu_name = "Add Treatment";
         mNavigationDrawerFragment.setUp(R.id.navigation_drawer, (DrawerLayout) findViewById(R.id.drawer_layout), menu_name, this);
     }
 
@@ -89,7 +87,7 @@ public class AddTreatment extends Activity implements NavigationDrawerFragment.N
                 Spinner eating_time_spinner = (Spinner) findViewById(R.id.eating_time_spinner);
                 String spinnerValue = eating_time_spinner.getSelectedItem().toString();
                 Log.w("spinnerValue = " + spinnerValue, "MESSAGE");
-                double spinnerDouble = 0.0;
+                double spinnerDouble;
                 switch (spinnerValue){
                     case "Now":         spinnerDouble = 1.0;
                                         break;
@@ -137,15 +135,14 @@ public class AddTreatment extends Activity implements NavigationDrawerFragment.N
                     }
                     treatmentTime = convertedDate.getTime();
                     finish();
-                } else {
-                    time_value.setError("Time Can Not be blank");
-                }
+                } else time_value.setError("Time Can Not be blank");
 
                 Treatments treatment = Treatments.create(bgValue, carbValue, insulinValue, spinnerDouble, treatmentTime, getApplicationContext());
                 Log.w("Treatments treatment", "MESSAGE");
                 Intent tableIntent = new Intent(v.getContext(), Home.class);
                 Log.w("Intent tableintent", "MESSAGE");
                 startActivity(tableIntent);
+                Log.w("tableintent finished", "MESSAGE");
                 finish();
             }
         });

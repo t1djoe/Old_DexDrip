@@ -53,6 +53,7 @@ public class Treatments extends Model {
         treatment.insulin = insulin;
         treatment.eating_time = eatTime;
         treatment.treatment_time = treatTime;
+        treatment.save();
 
         TreatmentSendQueue.addToQueue(treatment, "create", context);
         return(treatment);

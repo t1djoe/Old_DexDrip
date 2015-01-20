@@ -40,7 +40,7 @@ public class TreatmentDataTable extends ListActivity implements NavigationDrawer
 
     private void getData() {
         //Cursor cursor = Cache.openDatabase().rawQuery("Select * from Treatments order by treatment_time desc", null);
-        Log.w("Cursor cursro", "MESSAGE");
+        Log.w("Cursor cursor", "MESSAGE");
         Cursor cursor = Cache.openDatabase().rawQuery("Select * from Treatments", null);
         Log.w("adapter", "MESSAGE");
         SimpleCursorAdapter adapter = new SimpleCursorAdapter(this,
