@@ -20,7 +20,18 @@
         android:textSize="24sp"
         android:text="Add Treatment"
         android:layout_centerHorizontal="true"/>
-
+        
+    <LinearLayout
+    android:orientation="horizontal" 
+    android:layout_width="fill_parent" 
+    android:layout_height="wrap_content">
+        
+    <TextView 
+        android:layout_width="wrap_content" 
+        android:layout_height="wrap_content" 
+        android:text="Glucose Reading: "
+        android:layout_marginTop="41dp" /> 
+        
     <EditText
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -36,7 +47,44 @@
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="41dp" />
+    </LinearLayout>
+    
+    <RadioGroup
+        android:id="@+id/radioMeasMethod"
+        android:layout_marginTop="81dp"
+        android:layout_centerHorizontal="true"
+        android:orientation="horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" >
 
+        <RadioButton
+            android:id="@+id/radioMeter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignStart="@+id/insulin_units"
+            android:text="Meter"
+            android:checked="true" />
+
+        <RadioButton
+            android:id="@+id/radioSensor"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignEnd="@+id/insulin_units"
+            android:text="Sensor" />
+
+    </RadioGroup>
+        
+    <LinearLayout
+    android:orientation="horizontal" 
+    android:layout_width="fill_parent" 
+    android:layout_height="wrap_content">
+        
+    <TextView 
+        android:layout_width="wrap_content" 
+        android:layout_height="wrap_content" 
+        android:text="Carbs Given: "
+        android:layout_marginTop="101dp"/> 
+        
     <EditText
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -52,7 +100,19 @@
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="101dp" />
-
+    </LinearLayout>
+    
+    <LinearLayout
+    android:orientation="horizontal" 
+    android:layout_width="fill_parent" 
+    android:layout_height="wrap_content">
+        
+    <TextView 
+        android:layout_width="wrap_content" 
+        android:layout_height="wrap_content" 
+        android:text="Insulin Given: "
+        android:layout_marginTop="141dp"/> 
+            
     <EditText
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -67,9 +127,21 @@
         android:hint="Enter Insulin in Units"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="161dp" />
+        android:layout_marginTop="141dp" />
+    </LinearLayout>
 
-
+    
+    <LinearLayout
+    android:orientation="horizontal" 
+    android:layout_width="fill_parent" 
+    android:layout_height="wrap_content">
+        
+    <TextView 
+        android:layout_width="wrap_content" 
+        android:layout_height="wrap_content" 
+        android:text="Eating In: "
+        android:layout_marginTop="221dp"/> 
+          
     <Spinner
         android:id="@+id/eating_time_spinner"
         android:layout_marginTop="221dp"
@@ -79,10 +151,59 @@
         android:prompt="@string/sel_eating_time"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
+    </LinearLayout>
 
+    <TextView 
+        android:layout_width="wrap_content" 
+        android:layout_height="wrap_content" 
+        android:text="Additional Notes, Comments:"
+        android:layout_marginTop="261dp"/> 
+   
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="numberDecimal"
+        android:ems="10"
+        android:id="@+id/notes"
+        android:autoText="false"
+        android:text=""
+        android:singleLine="true"
+        android:textAlignment="center"
+        android:textSize="24sp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="281dp" />  
+    
+    <LinearLayout
+    android:orientation="horizontal" 
+    android:layout_width="fill_parent" 
+    android:layout_height="wrap_content">
+        
+    <TextView 
+        android:layout_width="wrap_content" 
+        android:layout_height="wrap_content" 
+        android:text="Entered By: "
+        android:layout_marginTop="341dp"/> 
+            
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="numberDecimal"
+        android:ems="10"
+        android:id="@+id/entered_by"
+        android:autoText="false"
+        android:text=""
+        android:singleLine="true"
+        android:textAlignment="center"
+        android:textSize="24sp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="341dp" />
+    </LinearLayout>
+        
     <RadioGroup
         android:id="@+id/radioTime"
-        android:layout_marginTop="281dp"
+        android:layout_marginTop="401dp"
         android:layout_centerHorizontal="true"
         android:orientation="horizontal"
         android:layout_width="wrap_content"
@@ -119,7 +240,7 @@
         android:hint="Event time hh:mm  "
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="311dp" />
+        android:layout_marginTop="441dp" />
 
     <Button
         android:layout_width="wrap_content"
@@ -128,7 +249,7 @@
         android:id="@+id/save_treatment_button"
         android:layout_below="@+id/bg_value"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="301dp" />
+        android:layout_marginTop="481dp" />
 
 </RelativeLayout>
 <fragment android:id="@+id/navigation_drawer"
