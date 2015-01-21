@@ -22,8 +22,8 @@ import java.util.Date;
 public class AddTreatment extends Activity implements NavigationDrawerFragment.NavigationDrawerCallbacks {
     private Button button;
     private NavigationDrawerFragment mNavigationDrawerFragment;
-    private RadioGroup radioTimeGroup;
-    private RadioButton radioTimeButton;
+    private RadioGroup radioTimeGroup, radioMethodGroup;
+    private RadioButton radioTimeButton, radioMethodButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,7 +50,13 @@ public class AddTreatment extends Activity implements NavigationDrawerFragment.N
 
         button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
+                radioMethodGroup = (RadioGroup) findViewById(R.id.radioMeasMethod);
                 radioTimeGroup = (RadioGroup) findViewById(R.id.radioTime);
+
+                Spinner event_type_spinner = (Spinner) findViewById(R.id.event_type_spinner);
+                String eventSpinnerValue = event_type_spinner.getSelectedItem().toString();
+                Log.w("spinnerValue = " + eventSpinnerValue, "MESSAGE");
+
                 EditText bg_value = (EditText) findViewById(R.id.bg_value);
                 String bg_string_value = bg_value.getText().toString();
                 double bgValue = 0.0;
@@ -61,6 +67,11 @@ public class AddTreatment extends Activity implements NavigationDrawerFragment.N
                 } else {
                     bg_value.setError("BG Can Not be blank");
                 }
+
+                int selectedMethodId = radioMethodGroup.getCheckedRadioButtonId();
+                radioMethodButton = (RadioButton) findViewById(selectedMethodId);
+                String measMethod = radioMethodButton.getText().toString();
+                Log.w("measMethod = " + measMethod, "MESSAGE");
 
                 EditText carb_value = (EditText) findViewById(R.id.carb_grams);
                 String carb_string_value = carb_value.getText().toString();
@@ -103,6 +114,11 @@ public class AddTreatment extends Activity implements NavigationDrawerFragment.N
                                         break;
                 }
 
+                EditText notes = (EditText) findViewById(R.id.notes);
+                String notes_string_value = notes.getText().toString();
+
+                EditText entered_by = (EditText) findViewById(R.id.entered_by);
+                String entered_by_string_value = entered_by.getText().toString();
 
                 SimpleDateFormat sdf = new SimpleDateFormat("h:mm a");
                 String currentDateandTime = sdf.format(new Date());
@@ -137,7 +153,7 @@ public class AddTreatment extends Activity implements NavigationDrawerFragment.N
                     finish();
                 } else time_value.setError("Time Can Not be blank");
 
-                Treatments treatment = Treatments.create(bgValue, carbValue, insulinValue, spinnerDouble, treatmentTime, getApplicationContext());
+                Treatments treatment = Treatments.create(eventSpinnerValue, bgValue, measMethod, carbValue, insulinValue, spinnerDouble, notes_string_value, entered_by_string_value, treatmentTime, getApplicationContext());
                 Log.w("Treatments treatment", "MESSAGE");
                 Intent tableIntent = new Intent(v.getContext(), Home.class);
                 Log.w("Intent tableintent", "MESSAGE");

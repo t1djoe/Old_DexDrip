@@ -63,6 +63,7 @@ public class SettingsActivity extends PreferenceActivity {
         bindPreferenceSummaryToValue(findPreference("cloud_storage_mongodb_uri"));
         bindPreferenceSummaryToValue(findPreference("cloud_storage_mongodb_collection"));
         bindPreferenceSummaryToValue(findPreference("cloud_storage_mongodb_device_status_collection"));
+        bindPreferenceSummaryToValue(findPreference("cloud_storage_mongodb_treatments_collection"));
         bindPreferenceSummaryToValue(findPreference("cloud_storage_api_base"));
         bindPreferenceSummaryToValue(findPreference("dex_collection_method"));
         bindPreferenceSummaryToValue(findPreference("wifi_recievers_addresses"));

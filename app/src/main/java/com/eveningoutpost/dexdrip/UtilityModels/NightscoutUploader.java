@@ -87,6 +87,7 @@ public class NightscoutUploader {
 
             if (enableMongoUpload) {
                 double start = new Date().getTime();
+                Log.i(TAG, String.format("Starting upload of %s record using a Mongo", glucoseDataSets.size()));
                 mongoStatus = doMongoUpload(prefs, glucoseDataSets, meterRecords, calRecords, treatmentRecords);
                 Log.i(TAG, String.format("Finished upload of %s record using a Mongo in %s ms", glucoseDataSets.size() + meterRecords.size(), System.currentTimeMillis() - start));
             }
@@ -349,10 +350,9 @@ public class NightscoutUploader {
             SimpleDateFormat format = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss a");
             format.setTimeZone(TimeZone.getDefault());
 
-            json.put("device", "dexcom");
-            json.put("eventType", "Meal Bolus");
+            json.put("eventType", record.event_type);
             json.put("glucose", record.bg);
-            json.put("glucoseType", "Finger");
+            json.put("glucoseType", record.reading_type);
             json.put("carbs", record.carbs);
             json.put("insulin", record.insulin);
             json.put("preBolus", record.eating_time);
@@ -391,6 +391,7 @@ public class NightscoutUploader {
             String dbURI = prefs.getString("cloud_storage_mongodb_uri", null);
             String collectionName = prefs.getString("cloud_storage_mongodb_collection", null);
             String dsCollectionName = prefs.getString("cloud_storage_mongodb_device_status_collection", "devicestatus");
+            String tCollectionName = prefs.getString("cloud_storage_mongodb_treatments_collection", "treatments");
 
             if (dbURI != null && collectionName != null) {
                 try {
@@ -451,6 +452,22 @@ public class NightscoutUploader {
                     devicestatus.put("uploaderBattery", getBatteryLevel());
                     devicestatus.put("created_at", new Date());
                     dsCollection.insert(devicestatus, WriteConcern.UNACKNOWLEDGED);
+
+                    for (Treatments treatRecord : treatmentRecords) {
+                        // make db object
+                        DBCollection testCollection = db.getCollection(tCollectionName.trim());
+                        BasicDBObject testData = new BasicDBObject();
+                        testData.put("eventType", treatRecord.event_type);
+                        testData.put("glucose", treatRecord.bg);
+                        testData.put("glucoseType", treatRecord.reading_type);
+                        testData.put("carbs", treatRecord.carbs);
+                        testData.put("insulin", treatRecord.insulin);
+                        testData.put("preBolus", treatRecord.eating_time);
+                        testData.put("notes", treatRecord.notes);
+                        testData.put("enteredBy", treatRecord.entered_by);
+                        testData.put("created_at", treatRecord.treatment_time);
+                        testCollection.insert(testData, WriteConcern.UNACKNOWLEDGED);
+                    }
 
                     client.close();
 

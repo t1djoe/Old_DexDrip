@@ -24,9 +24,18 @@ import java.util.List;
 @Table(name = "Treatments", id = BaseColumns._ID)
 public class Treatments extends Model {
 
+
+    @Expose
+    @Column(name = "event_type")
+    public String event_type;
+
     @Expose
     @Column(name = "bg")
     public double bg;
+
+    @Expose
+    @Column(name = "reading_type")
+    public String reading_type;
 
     @Expose
     @Column(name = "carbs")
@@ -41,17 +50,29 @@ public class Treatments extends Model {
     public double eating_time;
 
     @Expose
+    @Column(name = "notes")
+    public String notes;
+
+    @Expose
+    @Column(name = "entered_by")
+    public String entered_by;
+
+    @Expose
     @Column(name = "treatment_time", index = true)
     public double treatment_time;
 
-    public static Treatments create(double bg, double carbs, double insulin, double eatTime, double treatTime, Context context) {
+    public static Treatments create(String eventType, double bg, String readingType, double carbs, double insulin, double eatTime, String notes, String enteredBy, double treatTime, Context context) {
 
         Treatments treatment = new Treatments();
 
+        treatment.event_type = eventType;
         treatment.bg = bg;
+        treatment.reading_type = readingType;
         treatment.carbs = carbs;
         treatment.insulin = insulin;
         treatment.eating_time = eatTime;
+        treatment.notes = notes;
+        treatment.entered_by = enteredBy;
         treatment.treatment_time = treatTime;
         treatment.save();
 

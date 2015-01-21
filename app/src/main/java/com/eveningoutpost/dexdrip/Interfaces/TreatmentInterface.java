@@ -5,7 +5,6 @@ import com.eveningoutpost.dexdrip.Models.Treatments;
 import retrofit.Callback;
 import retrofit.http.Body;
 import retrofit.http.POST;
-import retrofit.http.PUT;
 import retrofit.http.Path;
 
 /**
