@@ -355,7 +355,7 @@ public class NightscoutUploader {
             json.put("glucoseType", record.reading_type);
             json.put("carbs", record.carbs);
             json.put("insulin", record.insulin);
-            json.put("preBolus", record.eating_time);
+            json.put("preBolus", format.format(record.eating_time));
             json.put("created_at", format.format(record.treatment_time));
         }
 
@@ -462,7 +462,7 @@ public class NightscoutUploader {
                         testData.put("preBolus", treatRecord.eating_time);
                         testData.put("notes", treatRecord.notes);
                         testData.put("enteredBy", treatRecord.entered_by);
-                        testData.put("created_at", treatRecord.treatment_time);
+                        testData.put("created_at", format.format(treatRecord.treatment_time));
                         Log.i(TAG, "Data populated");
                         testCollection.insert(testData, WriteConcern.UNACKNOWLEDGED);
                         Log.i(TAG, "Data inserted");
