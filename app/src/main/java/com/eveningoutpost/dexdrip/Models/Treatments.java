@@ -49,7 +49,7 @@ public class Treatments extends Model {
 
     @Expose
     @Column(name = "eating_time")
-    public Timestamp eating_time;
+    public long eating_time;
 
     @Expose
     @Column(name = "notes")
@@ -61,9 +61,9 @@ public class Treatments extends Model {
 
     @Expose
     @Column(name = "treatment_time", index = true)
-    public Timestamp treatment_time;
+    public long treatment_time;
 
-    public static Treatments create(String eventType, double bg, String readingType, double carbs, double insulin, Timestamp eatTime, String notes, String enteredBy, Timestamp treatTime, Context context) {
+    public static Treatments create(String eventType, double bg, String readingType, double carbs, double insulin, long eatTime, String notes, String enteredBy, long treatTime, Context context) {
 
         Treatments treatment = new Treatments();
 
