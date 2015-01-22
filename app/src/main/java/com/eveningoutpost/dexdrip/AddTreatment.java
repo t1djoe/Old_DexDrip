@@ -117,8 +117,9 @@ public class AddTreatment extends Activity implements NavigationDrawerFragment.N
                     default:            spinnerLong = 0;
                                         break;
                 }
-                currentDate.setTime((currentDate.getTime() + (spinnerLong * 60000)));
-                eventTime = currentDate.getTime();
+                //currentDate.setTime((currentDate.getTime() + (spinnerLong * 60000)));
+                //eventTime = currentDate.getTime();
+		eventTime = spinnerLong;
 
                 EditText notes = (EditText) findViewById(R.id.notes);
                 String notes_string_value = notes.getText().toString();
