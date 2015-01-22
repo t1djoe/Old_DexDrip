@@ -9,12 +9,14 @@ import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
 import com.activeandroid.query.Select;
 import com.eveningoutpost.dexdrip.Sensor;
+import com.eveningoutpost.dexdrip.UtilityModels.Notifications;
 import com.eveningoutpost.dexdrip.UtilityModels.TreatmentSendQueue;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.annotations.Expose;
 import com.google.gson.internal.bind.DateTypeAdapter;
 
+import java.sql.Timestamp;
 import java.util.Date;
 import java.util.List;
 
@@ -47,7 +49,7 @@ public class Treatments extends Model {
 
     @Expose
     @Column(name = "eating_time")
-    public double eating_time;
+    public Timestamp eating_time;
 
     @Expose
     @Column(name = "notes")
@@ -59,9 +61,9 @@ public class Treatments extends Model {
 
     @Expose
     @Column(name = "treatment_time", index = true)
-    public double treatment_time;
+    public Timestamp treatment_time;
 
-    public static Treatments create(String eventType, double bg, String readingType, double carbs, double insulin, double eatTime, String notes, String enteredBy, double treatTime, Context context) {
+    public static Treatments create(String eventType, double bg, String readingType, double carbs, double insulin, Timestamp eatTime, String notes, String enteredBy, Timestamp treatTime, Context context) {
 
         Treatments treatment = new Treatments();
 

@@ -446,17 +446,14 @@ public class NightscoutUploader {
                         dexcomData.update(testData, testData, true, false, WriteConcern.UNACKNOWLEDGED);
                     }
 
-                    // TODO: quick port from original code, revisit before release
-                    DBCollection dsCollection = db.getCollection(dsCollectionName);
-                    BasicDBObject devicestatus = new BasicDBObject();
-                    devicestatus.put("uploaderBattery", getBatteryLevel());
-                    devicestatus.put("created_at", new Date());
-                    dsCollection.insert(devicestatus, WriteConcern.UNACKNOWLEDGED);
-
+                    Log.i(TAG, "The number of treatment records being sent to MongoDB is " + treatmentRecords.size());
                     for (Treatments treatRecord : treatmentRecords) {
                         // make db object
                         DBCollection testCollection = db.getCollection(tCollectionName.trim());
+                        Log.i(TAG, "db object created");
                         BasicDBObject testData = new BasicDBObject();
+                        Log.i(TAG, "testData created");
+
                         testData.put("eventType", treatRecord.event_type);
                         testData.put("glucose", treatRecord.bg);
                         testData.put("glucoseType", treatRecord.reading_type);
@@ -466,8 +463,16 @@ public class NightscoutUploader {
                         testData.put("notes", treatRecord.notes);
                         testData.put("enteredBy", treatRecord.entered_by);
                         testData.put("created_at", treatRecord.treatment_time);
+                        Log.i(TAG, "Data populated");
                         testCollection.insert(testData, WriteConcern.UNACKNOWLEDGED);
+                        Log.i(TAG, "Data inserted");
                     }
+
+                    DBCollection dsCollection = db.getCollection(dsCollectionName);
+                    BasicDBObject devicestatus = new BasicDBObject();
+                    devicestatus.put("uploaderBattery", getBatteryLevel());
+                    devicestatus.put("created_at", new Date());
+                    dsCollection.insert(devicestatus, WriteConcern.UNACKNOWLEDGED);
 
                     client.close();
 

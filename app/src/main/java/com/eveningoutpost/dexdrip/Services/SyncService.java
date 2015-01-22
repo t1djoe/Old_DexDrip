@@ -50,6 +50,7 @@ public class SyncService extends Service {
         enableMongoUpload = prefs.getBoolean("cloud_storage_mongodb_enable", false);
 
         if (enableRESTUpload || enableMongoUpload) {
+            Log.w("SYNC TO MONGODB", "MongoUpload");
             syncToMongoDb();
         }
         if (false) {

@@ -14,7 +14,10 @@ import android.widget.RadioGroup;
 import android.widget.Spinner;
 
 import com.eveningoutpost.dexdrip.Models.Treatments;
+import com.eveningoutpost.dexdrip.UtilityModels.Notifications;
+import com.eveningoutpost.dexdrip.UtilityModels.TreatmentSendQueue;
 
+import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -98,21 +101,25 @@ public class AddTreatment extends Activity implements NavigationDrawerFragment.N
                 Spinner eating_time_spinner = (Spinner) findViewById(R.id.eating_time_spinner);
                 String spinnerValue = eating_time_spinner.getSelectedItem().toString();
                 Log.w("spinnerValue = " + spinnerValue, "MESSAGE");
-                double spinnerDouble;
+                long spinnerLong;
+                java.sql.Timestamp eventTime = new Timestamp();
+                Date currentDate = new Date();
                 switch (spinnerValue){
-                    case "Now":         spinnerDouble = 1.0;
+                    case "Now":         spinnerLong = 0;
                                         break;
-                    case "15 Minutes":  spinnerDouble = 2.0;
+                    case "15 Minutes":  spinnerLong = 15;
                                         break;
-                    case "30 Minutes":  spinnerDouble = 3.0;
+                    case "30 Minutes":  spinnerLong = 30;
                                         break;
-                    case "45 Minutes":  spinnerDouble = 4.0;
+                    case "45 Minutes":  spinnerLong = 45;
                                         break;
-                    case "60 Minutes":  spinnerDouble = 5.0;
+                    case "60 Minutes":  spinnerLong = 60;
                                         break;
-                    default:            spinnerDouble = -1.0;
+                    default:            spinnerLong = 0;
                                         break;
                 }
+                currentDate.setTime((currentDate.getTime() + (spinnerLong * 60000)));
+                eventTime.setTime(currentDate.getTime());
 
                 EditText notes = (EditText) findViewById(R.id.notes);
                 String notes_string_value = notes.getText().toString();
@@ -137,7 +144,7 @@ public class AddTreatment extends Activity implements NavigationDrawerFragment.N
                 }
 
                 String time_string_value = time_value.getText().toString();
-                double treatmentTime = 0.0;
+                java.sql.Timestamp treatmentTime = new Timestamp();
                 if (!TextUtils.isEmpty(time_string_value)) {
                     Log.w("timeValue = " + time_string_value, "MESSAGE");
                     SimpleDateFormat dateFormat = new SimpleDateFormat("h:mm a");
@@ -149,11 +156,11 @@ public class AddTreatment extends Activity implements NavigationDrawerFragment.N
                         // TODO Auto-generated catch block
                         e.printStackTrace();
                     }
-                    treatmentTime = convertedDate.getTime();
+                    treatmentTime.setTime(convertedDate.getTime());
                     finish();
                 } else time_value.setError("Time Can Not be blank");
 
-                Treatments treatment = Treatments.create(eventSpinnerValue, bgValue, measMethod, carbValue, insulinValue, spinnerDouble, notes_string_value, entered_by_string_value, treatmentTime, getApplicationContext());
+                Treatments treatment = Treatments.create(eventSpinnerValue, bgValue, measMethod, carbValue, insulinValue, eventTime, notes_string_value, entered_by_string_value, treatmentTime, getApplicationContext());
                 Log.w("Treatments treatment", "MESSAGE");
                 Intent tableIntent = new Intent(v.getContext(), Home.class);
                 Log.w("Intent tableintent", "MESSAGE");

@@ -32,6 +32,7 @@ public class MongoSendTask extends AsyncTask<String, Void, SyncService> {
             context = pContext;
         }
         public MongoSendTask(Context pContext, TreatmentSendQueue treatmentSendQueue) {
+            Log.w("treatmentsQueue", "MESSAGE");
             treatmentsQueue.add(treatmentSendQueue);
             context = pContext;
         }
@@ -53,9 +54,10 @@ public class MongoSendTask extends AsyncTask<String, Void, SyncService> {
                     bgReadings.add(job.bgReading);
                 }
                 for (TreatmentSendQueue job : treatmentsQueue) {
+                    Log.w("treatments.add", "MESSAGE");
                     treatments.add(job.treatment);
                 }
-                if(bgReadings.size() + calibrations.size() > 0) {
+                if(bgReadings.size() + calibrations.size() + treatments.size() > 0) {
                     NightscoutUploader uploader = new NightscoutUploader(context);
                     boolean uploadStatus = uploader.upload(bgReadings, calibrations, calibrations, treatments);
                     if (uploadStatus) {
@@ -64,6 +66,9 @@ public class MongoSendTask extends AsyncTask<String, Void, SyncService> {
                         }
                         for (BgSendQueue bgReading : bgsQueue) {
                             bgReading.markMongoSuccess();
+                        }
+                        for (TreatmentSendQueue treatQueue : treatmentsQueue) {
+                            treatQueue.markMongoSuccess();
                         }
                     }
                 }
