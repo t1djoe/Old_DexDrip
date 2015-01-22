@@ -101,8 +101,7 @@ public class AddTreatment extends Activity implements NavigationDrawerFragment.N
                 Spinner eating_time_spinner = (Spinner) findViewById(R.id.eating_time_spinner);
                 String spinnerValue = eating_time_spinner.getSelectedItem().toString();
                 Log.w("spinnerValue = " + spinnerValue, "MESSAGE");
-                long spinnerLong;
-                java.sql.Timestamp eventTime = new Timestamp();
+                long spinnerLong, eventTime;
                 Date currentDate = new Date();
                 switch (spinnerValue){
                     case "Now":         spinnerLong = 0;
@@ -119,7 +118,7 @@ public class AddTreatment extends Activity implements NavigationDrawerFragment.N
                                         break;
                 }
                 currentDate.setTime((currentDate.getTime() + (spinnerLong * 60000)));
-                eventTime.setTime(currentDate.getTime());
+                eventTime = currentDate.getTime();
 
                 EditText notes = (EditText) findViewById(R.id.notes);
                 String notes_string_value = notes.getText().toString();
@@ -131,11 +130,11 @@ public class AddTreatment extends Activity implements NavigationDrawerFragment.N
                 String currentDateandTime = sdf.format(new Date());
                 Log.w("currentDateandTime = " + currentDateandTime, "MESSAGE");
 
-		        // get selected radio button from radioGroup
-			    int selectedId = radioTimeGroup.getCheckedRadioButtonId();
+		// get selected radio button from radioGroup
+		int selectedId = radioTimeGroup.getCheckedRadioButtonId();
                 EditText time_value = (EditText) findViewById(R.id.event_time);
-			    // find the radiobutton by returned id
-		        radioTimeButton = (RadioButton) findViewById(selectedId);
+		// find the radiobutton by returned id
+		radioTimeButton = (RadioButton) findViewById(selectedId);
                 Log.w("radioTimeButton = " + radioTimeButton.getText(), "MESSAGE");
 
                 //
@@ -144,7 +143,7 @@ public class AddTreatment extends Activity implements NavigationDrawerFragment.N
                 }
 
                 String time_string_value = time_value.getText().toString();
-                java.sql.Timestamp treatmentTime = new Timestamp();
+                long treatmentTime;
                 if (!TextUtils.isEmpty(time_string_value)) {
                     Log.w("timeValue = " + time_string_value, "MESSAGE");
                     SimpleDateFormat dateFormat = new SimpleDateFormat("h:mm a");
@@ -156,7 +155,7 @@ public class AddTreatment extends Activity implements NavigationDrawerFragment.N
                         // TODO Auto-generated catch block
                         e.printStackTrace();
                     }
-                    treatmentTime.setTime(convertedDate.getTime());
+                    treatmentTime = convertedDate.getTime();
                     finish();
                 } else time_value.setError("Time Can Not be blank");
 
