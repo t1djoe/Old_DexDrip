@@ -264,11 +264,12 @@ public class NightscoutUploader {
 
                 if (apiVersion >= 1) {
                     for (Treatments treatmentRecord : treatmentRecords) {
-
+                        Log.i(TAG, "treatmentRecord REST Upload");
                         JSONObject json = new JSONObject();
 
                         try {
                             populateV1APITreatmentEntry(json, treatmentRecord);
+                            Log.i(TAG, "treatmentEntry populated");
                         } catch (Exception e) {
                             Log.w(TAG, "Unable to populate entry");
                             continue;
@@ -347,7 +348,7 @@ public class NightscoutUploader {
         }
 
         private void populateV1APITreatmentEntry(JSONObject json, Treatments record) throws Exception {
-            SimpleDateFormat format = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss a");
+            SimpleDateFormat format = new SimpleDateFormat("MM/dd/yyyyTHH:mm:ss.sssZ");
             format.setTimeZone(TimeZone.getDefault());
 
             json.put("eventType", record.event_type);
@@ -355,7 +356,7 @@ public class NightscoutUploader {
             json.put("glucoseType", record.reading_type);
             json.put("carbs", record.carbs);
             json.put("insulin", record.insulin);
-            json.put("preBolus", format.format(record.eating_time));
+            json.put("preBolus", record.eating_time);
             json.put("created_at", format.format(record.treatment_time));
         }
 
@@ -385,7 +386,7 @@ public class NightscoutUploader {
 
         private boolean doMongoUpload(SharedPreferences prefs, List<BgReading> glucoseDataSets,
                                       List<Calibration> meterRecords,  List<Calibration> calRecords, List<Treatments> treatmentRecords) {
-            SimpleDateFormat format = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss a");
+            SimpleDateFormat format = new SimpleDateFormat("MM/dd/yyyyTHH:mm:ss.sssZ");
             format.setTimeZone(TimeZone.getDefault());
 
             String dbURI = prefs.getString("cloud_storage_mongodb_uri", null);
