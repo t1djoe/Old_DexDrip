@@ -72,7 +72,7 @@ public class TreatmentSendQueue extends Model {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
 
         if (prefs.getBoolean("cloud_storage_mongodb_enable", false) || prefs.getBoolean("cloud_storage_api_enable", false)) {
-            Log.w("TREATMENT QUEUE:", String.valueOf(treatmentSendQueue.mongo_success));
+            Log.w("TREATMENT QUEUE:", String.valueOf(treatmentSendQueue.operation_type));
             if (operation_type == "create") {
                 MongoSendTask task = new MongoSendTask(context, treatmentSendQueue);
                 task.execute();
