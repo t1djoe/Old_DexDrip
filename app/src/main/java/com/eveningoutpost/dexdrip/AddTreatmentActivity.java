@@ -15,11 +15,9 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.List;
 
-//public class AddTreatmentActivity extends Activity implements OnItemSelectedListener {
 public class AddTreatmentActivity extends Activity {
     private Spinner eating_time_spinner;
     private Button button;
-    private String[] state = { "15 Minutes", "30 Minutes", "45 Minutes", "60 minutes"};
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -31,7 +29,6 @@ public class AddTreatmentActivity extends Activity {
 
     public void addListenerOnSpinnerItemSelection() {
         eating_time_spinner = (Spinner) findViewById(R.id.eating_time_spinner);
-        eating_time_spinner.setOnItemSelectedListener(new MyOnItemSelectedListener());
     }
 
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {

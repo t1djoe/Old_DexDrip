@@ -161,7 +161,7 @@ public class AddTreatment extends Activity implements NavigationDrawerFragment.N
                 finish();
             } else time_value.setError("Time Can Not be blank");
 
-            Treatments treatment = Treatments.create(eventSpinnerValue, bgValue, measMethod, carbValue, insulinValue, eventTime, notes_string_value, entered_by_string_value, treatmentTime, getApplicationContext());
+            Treatments treatment = Treatments.create(entered_by_string_value, eventSpinnerValue, bgValue, measMethod, carbValue, insulinValue, eventTime, notes_string_value, treatmentTime, getApplicationContext());
             Log.w("Treatments treatment", "MESSAGE");
             Intent tableIntent = new Intent(v.getContext(), Home.class);
             Log.w("Intent tableintent", "MESSAGE");

@@ -71,6 +71,7 @@
     <string name="pref_dialog_mongodb_treatment_collection">Enter Treatments collection name"</string>
     <string name="pref_message_mongodb_treatment_collection">This is the name of the collection where the treatments will be stored</string>
     <string name="pref_default_mongodb_treatment_collection">treatments</string>
+
     <!-- API Settings -->
     <string name="pref_title_api">API Upload (REST)</string>
     <string name="pref_title_api_enabled">Enabled</string>
@@ -84,6 +85,12 @@
     <string name="wifi_recievers_dialog_title">Enter ip addresses and ports of receivers</string>
     <string name="wifi_recievers_dialog_message">Comma separated list of ip:port (for example 37.142.132.220:50005,37.142.132.220:50006)</string>
 
+
+    <!-- broadcast settings -->
+    <string name="pref_title_broadcast_enabled">Broadcast locally</string>
+    <string name="pref_summary_broadcast_enabled">Enable local broadcast of data so other apps (eg. NightWatch) can listen on new values</string>
+
+    <!-- prebolus settings -->
     <string name="sel_eating_time">Time in minutes</string>
     <string-array name="eating_time_array">
         <item>Now</item>
@@ -99,6 +106,7 @@
         <item>Snack Bolus</item>
         <item>Meal Bolus</item>
         <item>Correction Bolus</item>
+        <item>Basal Insulin</item>
         <item>Carb Correction</item>
         <item>Note</item>
         <item>Question</item>

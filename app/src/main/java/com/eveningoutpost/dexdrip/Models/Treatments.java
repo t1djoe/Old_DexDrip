@@ -63,10 +63,11 @@ public class Treatments extends Model {
     @Column(name = "treatment_time", index = true)
     public long treatment_time;
 
-    public static Treatments create(String eventType, double bg, String readingType, double carbs, double insulin, long eatTime, String notes, String enteredBy, long treatTime, Context context) {
+    public static Treatments create(String enteredBy, String eventType, double bg, String readingType, double carbs, double insulin, long eatTime, String notes, long treatTime, Context context) {
 
         Treatments treatment = new Treatments();
 
+        treatment.entered_by = enteredBy;
         treatment.event_type = eventType;
         treatment.bg = bg;
         treatment.reading_type = readingType;
@@ -74,7 +75,6 @@ public class Treatments extends Model {
         treatment.insulin = insulin;
         treatment.eating_time = eatTime;
         treatment.notes = notes;
-        treatment.entered_by = enteredBy;
         treatment.treatment_time = treatTime;
         treatment.save();
 

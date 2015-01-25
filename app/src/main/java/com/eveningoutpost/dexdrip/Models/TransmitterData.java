@@ -1,5 +1,6 @@
 package com.eveningoutpost.dexdrip.Models;
 
+import android.preference.PreferenceManager;
 import android.provider.BaseColumns;
 import android.util.Log;
 
@@ -17,6 +18,7 @@ import java.util.UUID;
 @Table(name = "TransmitterData", id = BaseColumns._ID)
 public class TransmitterData extends Model {
     //private final static String TAG = BgReading.class.getSimpleName();
+    private final static String TAG = TransmitterData.class.getSimpleName();
 
     @Column(name = "timestamp", index = true)
     public long timestamp;
@@ -37,38 +39,76 @@ public class TransmitterData extends Model {
     public int wixel_battery_level;
 
     public static TransmitterData create(byte[] buffer, int len) {
-        TransmitterData transmitterData = new TransmitterData();
-        StringBuilder data_string = new StringBuilder();
-        if (len < 6) { return null; };
+        if (len < 6) { return null; }
+        if (buffer[0] == 0x10 && buffer[1] == 0x00) {
+            //this is a dexbridge packet.  Process accordingly.
+            Log.w(TAG, "create Processing a Dexbridge packet");
+            ByteBuffer txData = ByteBuffer.allocate(len);
+            txData.order(ByteOrder.LITTLE_ENDIAN);
+            txData.put(buffer, 0, len);
+            TransmitterData transmitterData = new TransmitterData();
+            transmitterData.raw_data = txData.getInt(2);
+            transmitterData.sensor_battery_level = txData.getShort(10);
+            transmitterData.wixel_battery_level = txData.getShort(11);
+            transmitterData.timestamp = new Date().getTime();
+            transmitterData.uuid = UUID.randomUUID().toString();
 
-        for (int i = 0; i < len; ++i) {
-            data_string.append((char) buffer[i]);
+            transmitterData.save();
+            Log.w(TAG, "Created transmitterData record with Raw value of " + transmitterData.raw_data + " at " +transmitterData.timestamp);
+            return transmitterData;
+        } else {
+            //this is NOT a dexbridge packet.  Process accordingly.
+            Log.w(TAG, "create Processing a BTWixel or IPWixel packet");
+            StringBuilder data_string = new StringBuilder();
+
+            for (int i = 0; i < len; ++i) {
+                data_string.append((char) buffer[i]);
+            }
+            String[] data = data_string.toString().split("\\s+");
+            //randomDelay(100, 2000);
+            TransmitterData lastTransmitterData = TransmitterData.last();
+            if (lastTransmitterData != null && lastTransmitterData.raw_data == Integer.parseInt(data[0]) && Math.abs(lastTransmitterData.timestamp - new Date().getTime()) < (10000)) { //Stop allowing duplicate data, its bad!
+                return null;
+            }
+
+            TransmitterData transmitterData = new TransmitterData();
+            if (data.length > 1) {
+                transmitterData.sensor_battery_level = Integer.parseInt(data[1]);
+            }
+            if (Integer.parseInt(data[0]) < 1000) {
+                return null;
+            } // Sometimes the HM10 sends the battery level and readings in separate transmissions, filter out these incomplete packets!
+            /* note for above comment.  HM-1X BLE only send 80 characters at a time, and send data if there is any delay after one character.
+            This may be what you are experiencing.  Depending on the DexDrip-wixel code, you may be inserting a delay on occasion with printf.
+            Dexbridge resolves this by filling the bufer with the whole packet before sending it.  Also the message is at maximum 16 bytes long.
+            @jstevensog
+             */
+            transmitterData.raw_data = Integer.parseInt(data[0]);
+            transmitterData.wixel_battery_level = Integer.parseInt(data[2]);
+            transmitterData.timestamp = new Date().getTime();
+            transmitterData.uuid = UUID.randomUUID().toString();
+
+            transmitterData.save();
+            Log.w(TAG, "Created transmitterData record with Raw value of " + transmitterData.raw_data + " at " +transmitterData.timestamp);
+            return transmitterData;
         }
-        String[] data = data_string.toString().split("\\s+");
-        if(data.length > 1) {
-            transmitterData.sensor_battery_level = Integer.parseInt(data[1]);
-        }
-        Log.d("Raw String:", data_string.toString());
-        Log.d("Wixel Battery:", data[2].toString());
-        transmitterData.raw_data = Integer.parseInt(data[0]);
-        transmitterData.wixel_battery_level = Integer.parseInt(data[2]);
-        transmitterData.timestamp = new Date().getTime();
-        transmitterData.uuid = UUID.randomUUID().toString();
-        transmitterData.save();
-        return transmitterData;
     }
 
-    public static TransmitterData create(int raw_data ,int sensor_battery_level, int wixel_battery_level, long timestamp) {
+    public static TransmitterData create(int raw_data ,int sensor_battery_level, long timestamp) {
+        //randomDelay(100, 2000);
+        TransmitterData lastTransmitterData = TransmitterData.last();
+        if (lastTransmitterData != null && lastTransmitterData.raw_data == raw_data && Math.abs(lastTransmitterData.timestamp - new Date().getTime()) < (10000)) { //Stop allowing duplicate data, its bad!
+            return null;
+        }
+
         TransmitterData transmitterData = new TransmitterData();
         transmitterData.sensor_battery_level = sensor_battery_level;
-        transmitterData.wixel_battery_level = wixel_battery_level;
         transmitterData.raw_data = raw_data ;
         transmitterData.timestamp = timestamp;
         transmitterData.uuid = UUID.randomUUID().toString();
         transmitterData.save();
         return transmitterData;
     }
-
 
     public static TransmitterData last() {
         return new Select()

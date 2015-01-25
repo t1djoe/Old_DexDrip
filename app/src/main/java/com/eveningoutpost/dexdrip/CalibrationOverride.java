@@ -17,23 +17,23 @@ import com.eveningoutpost.dexdrip.Models.Calibration;
 
 
 public class CalibrationOverride extends Activity implements NavigationDrawerFragment.NavigationDrawerCallbacks {
-        Button button;
+    Button button;
     private String menu_name = "Override Calibration";
     private NavigationDrawerFragment mNavigationDrawerFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-            super.onCreate(savedInstanceState);
-            setContentView(R.layout.activity_calibration_override);
-            addListenerOnButton();
-            }
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_calibration_override);
+        addListenerOnButton();
+    }
 
     @Override
     protected void onResume(){
-                super.onResume();
+        super.onResume();
         mNavigationDrawerFragment = (NavigationDrawerFragment) getFragmentManager().findFragmentById(R.id.navigation_drawer);
         mNavigationDrawerFragment.setUp(R.id.navigation_drawer, (DrawerLayout) findViewById(R.id.drawer_layout), menu_name, this);
-            }
+    }
 
     @Override
     public void onNavigationDrawerItemSelected(int position) {
@@ -41,9 +41,9 @@ public class CalibrationOverride extends Activity implements NavigationDrawerFra
     }
 
     public void addListenerOnButton() {
-            button = (Button) findViewById(R.id.save_calibration_button);
+        button = (Button) findViewById(R.id.save_calibration_button);
 
-            button.setOnClickListener(new View.OnClickListener() {
+        button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 if (Sensor.isActive()) {
                     EditText value = (EditText) findViewById(R.id.bg_value);
@@ -51,11 +51,15 @@ public class CalibrationOverride extends Activity implements NavigationDrawerFra
                     if (!TextUtils.isEmpty(string_value)){
                         double calValue = Double.parseDouble(string_value);
 
-                         Calibration.last().overrideCalibration(calValue, getApplicationContext());
+                        Calibration last_calibration = Calibration.last();
+                        last_calibration.sensor_confidence = 0;
+                        last_calibration.slope_confidence = 0;
+                        last_calibration.save();
+                        Calibration.create(calValue, getApplicationContext());
 
-                         Intent tableIntent = new Intent(v.getContext(), Home.class);
-                         startActivity(tableIntent);
-                         finish();
+                        Intent tableIntent = new Intent(v.getContext(), Home.class);
+                        startActivity(tableIntent);
+                        finish();
                     } else {
                         value.setError("Calibration Can Not be blank");
                     }

@@ -41,14 +41,6 @@
                 android:dialogMessage="@string/pref_message_mongodb_device_status_collection"
                 android:defaultValue="@string/pref_default_mongodb_device_status_collection">
             </EditTextPreference>
-            <EditTextPreference
-                android:dependency="cloud_storage_mongodb_enable"
-                android:title="@string/pref_title_mongodb_treatment_collection"
-                android:key="cloud_storage_mongodb_treatments_collection"
-                android:dialogTitle="@string/pref_dialog_mongodb_treatment_collection"
-                android:dialogMessage="@string/pref_message_mongodb_treatment_collection"
-                android:defaultValue="@string/pref_default_mongodb_treatment_collection">
-            </EditTextPreference>
 
         </PreferenceScreen>
 
@@ -73,6 +65,13 @@
             </EditTextPreference>
 
         </PreferenceScreen>
+
+        <SwitchPreference
+            android:title="@string/pref_title_broadcast_enabled"
+            android:key="broadcast_data_through_intents"
+            android:summary="@string/pref_summary_broadcast_enabled"
+            android:defaultValue="false" >
+        </SwitchPreference>
     </PreferenceCategory>
 
 </PreferenceScreen>

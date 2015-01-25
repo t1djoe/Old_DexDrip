@@ -11,9 +11,10 @@ import android.graphics.Paint;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.widget.DrawerLayout;
-import android.widget.TextView;
 import android.util.Log;
 import android.view.View;
+import android.widget.TextView;
+
 import com.eveningoutpost.dexdrip.Models.ActiveBluetoothDevice;
 import com.eveningoutpost.dexdrip.Models.BgReading;
 import com.eveningoutpost.dexdrip.Models.Calibration;
@@ -40,6 +41,10 @@ public class Home extends Activity implements NavigationDrawerFragment.Navigatio
     SharedPreferences prefs;
     Viewport tempViewport = new Viewport();
     Viewport holdViewport = new Viewport();
+    public float left;
+    public float right;
+    public float top;
+    public float bottom;
     public boolean updateStuff;
     public boolean updatingPreviewViewport = false;
     public boolean updatingChartViewport = false;
@@ -113,7 +118,6 @@ public class Home extends Activity implements NavigationDrawerFragment.Navigatio
         previewChart.setViewportChangeListener(new ViewportListener());
         chart.setViewportChangeListener(new ChartViewPortListener());
         setViewport();
-
     }
 
     private class ChartViewPortListener implements ViewportChangeListener {
@@ -138,7 +142,7 @@ public class Home extends Activity implements NavigationDrawerFragment.Navigatio
                 tempViewport = newViewport;
                 updatingPreviewViewport = false;
             }
-            if (updateStuff) {
+            if (updateStuff == true) {
                 holdViewport.set(newViewport.left, newViewport.top, newViewport.right, newViewport.bottom);
             }
         }
@@ -160,9 +164,9 @@ public class Home extends Activity implements NavigationDrawerFragment.Navigatio
 
     @Override
     public void onPause() {
-        super.onPause();
-        if (_broadcastReceiver != null)
-            unregisterReceiver(_broadcastReceiver);
+         super.onPause();
+         if (_broadcastReceiver != null)
+             unregisterReceiver(_broadcastReceiver);
     }
 
     public void updateCurrentBgInfo() {
@@ -171,15 +175,16 @@ public class Home extends Activity implements NavigationDrawerFragment.Navigatio
         final TextView notificationText = (TextView)findViewById(R.id.notices);
         notificationText.setText("");
         boolean isBTWixel = CollectionServiceStarter.isBTWixel(getApplicationContext());
-        if((isBTWixel &&ActiveBluetoothDevice.first() != null) ||
-            (!isBTWixel && WixelReader.IsConfigured(getApplicationContext()))) {
+        Log.w("isBTWixel " + isBTWixel, "MESSAGE");
+        boolean isDexbridge = CollectionServiceStarter.isDexbridge(getApplicationContext());
+        Log.w("isDexbridge " + isDexbridge, "MESSAGE");
+        if(((isBTWixel || isDexbridge) && ActiveBluetoothDevice.first() != null) || ((!isBTWixel || !isDexbridge) && WixelReader.IsConfigured(getApplicationContext()))) {
             if (Sensor.isActive() && (Sensor.currentSensor().started_at + (60000 * 60 * 2)) < new Date().getTime()) {
                 if (BgReading.latest(2).size() > 1) {
-
                     List<Calibration> calibrations = Calibration.latest(2);
                     if (calibrations.size() > 1) {
-                        if (calibrations.get(0).slope <= 0.5 || calibrations.get(0).slope >= 1.4) {
-                            notificationText.setText("Possible bad calibration slope, recommend double calibration");
+                        if (calibrations.get(0).possible_bad != null && calibrations.get(0).possible_bad == true && calibrations.get(1).possible_bad != null && calibrations.get(1).possible_bad == false) {
+                            notificationText.setText("Possible bad calibration slope, please have a glass of water, wash hands, then recalibrate in a few!");
                         }
                         displayCurrentInfo();
                     } else {
@@ -195,15 +200,17 @@ public class Home extends Activity implements NavigationDrawerFragment.Navigatio
                 notificationText.setText("Now start your sensor");
             }
         } else {
-            if(isBTWixel) {
+            if(isBTWixel || isDexbridge) {
                 if((android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.JELLY_BEAN_MR2)) {
                     notificationText.setText("First pair with your BT device");
                 } else {
-                    notificationText.setText("Your device has to be android 4.3 and up to support Bluetooth Wixel");
+                    notificationText.setText("Your device has to be android 4.3 and up to support Bluetooth wixel");
                 }
-            } else {
-                notificationText.setText("First configure your wifi Wixel reader ip addresses");
             }
+            if (!isBTWixel){
+                if (!isDexbridge){
+                    notificationText.setText("First configure your wifi wixel reader ip addresses");
+            }}
         }
         mNavigationDrawerFragment = (NavigationDrawerFragment) getFragmentManager().findFragmentById(R.id.navigation_drawer);
         mNavigationDrawerFragment.setUp(R.id.navigation_drawer, (DrawerLayout) findViewById(R.id.drawer_layout), menu_name, this);
@@ -229,8 +236,7 @@ public class Home extends Activity implements NavigationDrawerFragment.Navigatio
         if (Math.round(((float) lastBgreading.wixel_battery_level - 3040)/260*100) > 0){
             currentWixelBatteryText.setText("Bridge Power: " + Math.round(((float) lastBgreading.wixel_battery_level - 3040)/260*100) + "%");}
         else{
-            currentWixelBatteryText.setText("Bridge Power: 0%");
-        }
+            currentWixelBatteryText.setText("Bridge Power: 0%");}
         Log.d("Wix Batt:", Integer.toString(lastBgreading.wixel_battery_level));
         if (lastBgreading != null) {
             double estimate = 0;
@@ -239,7 +245,6 @@ public class Home extends Activity implements NavigationDrawerFragment.Navigatio
                 estimate = BgReading.estimated_bg(lastBgreading.timestamp + (6000 * 7));
                 currentBgValueText.setText(bgGraphBuilder.unitized_string(BgReading.activePrediction()));
                 currentBgValueText.setPaintFlags(currentBgValueText.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
-                //TODO: change this to invisible when dex is our of range
             } else {
                 if (lastBgreading != null) {
                     estimate = BgReading.activePrediction();
@@ -255,6 +260,6 @@ public class Home extends Activity implements NavigationDrawerFragment.Navigatio
                 currentBgValueText.setTextColor(Color.WHITE);
             }
         }
-    setupCharts();
+        setupCharts();
     }
 }

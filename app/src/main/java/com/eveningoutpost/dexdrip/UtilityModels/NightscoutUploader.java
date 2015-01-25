@@ -280,14 +280,20 @@ public class NightscoutUploader {
 
                     try {
                         StringEntity se = new StringEntity(jsonString);
+                        Log.i(TAG, "Stringentity se" + se);
                         post.setEntity(se);
+                        Log.i(TAG, "post.setEntity");
                         post.setHeader("Accept", "application/json");
+                        Log.i(TAG, "post.setHeader Accept");
                         post.setHeader("Content-type", "application/json");
+                        Log.i(TAG, "post.setHeader Content-type");
 
                         ResponseHandler responseHandler = new BasicResponseHandler();
+                        Log.i(TAG, "responseHandler");
                         httpclient.execute(post, responseHandler);
+                        Log.i(TAG, "post.setHeader Accept");
                     } catch (Exception e) {
-                        Log.w(TAG, "Unable to post data");
+                        Log.w(TAG, "Unable to post treatment data");
                     }
                 }
             }
@@ -348,14 +354,16 @@ public class NightscoutUploader {
     }
 
     private void populateV1APITreatmentEntry(JSONObject json, Treatments record) throws Exception {
-        SimpleDateFormat format = new SimpleDateFormat("MM/dd/yyyyTHH:mm:ss.sssZ");
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.sss");
         format.setTimeZone(TimeZone.getDefault());
 
+        json.put("enteredBy", record.entered_by);
         json.put("eventType", record.event_type);
         json.put("glucose", record.bg);
         json.put("glucoseType", record.reading_type);
         json.put("carbs", record.carbs);
         json.put("insulin", record.insulin);
+        json.put("notes", record.notes);
         json.put("preBolus", record.eating_time);
         json.put("created_at", format.format(record.treatment_time));
     }
@@ -386,7 +394,7 @@ public class NightscoutUploader {
 
     private boolean doMongoUpload(SharedPreferences prefs, List<BgReading> glucoseDataSets,
                                   List<Calibration> meterRecords,  List<Calibration> calRecords, List<Treatments> treatmentRecords) {
-        SimpleDateFormat format = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss.sss");
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.sss");
         format.setTimeZone(TimeZone.getDefault());
 
         String dbURI = prefs.getString("cloud_storage_mongodb_uri", null);
@@ -455,18 +463,20 @@ public class NightscoutUploader {
                     BasicDBObject treatData = new BasicDBObject();
                     Log.w(TAG, "treatData created");
 
-                    if (treatRecord.event_type != "") {
-                        treatData.put("eventType", treatRecord.event_type);}
+                    treatData.put("enteredBy", treatRecord.entered_by);
+                    treatData.put("eventType", treatRecord.event_type);
+                    if (treatRecord.eating_time == 0){
+                        if (treatRecord.carbs != 0){
+                            treatData.put("carbs", treatRecord.carbs);}}
                     if (treatRecord.bg != 0) {
-                        treatData.put("glucose", treatRecord.bg);}
-                    if (treatRecord.reading_type != ""){
+                        treatData.put("glucose", treatRecord.bg);
                         treatData.put("glucoseType", treatRecord.reading_type);}
                     if (treatRecord.insulin != 0){
                         treatData.put("insulin", treatRecord.insulin);}
-                    if (treatRecord.notes != ""){
+                    if (treatRecord.notes.length() > 0){
                         treatData.put("notes", treatRecord.notes);}
                     if (treatRecord.entered_by != ""){
-                        treatData.put("enteredBy", treatRecord.entered_by);}
+                        }
                     treatData.put("created_at", format.format(treatRecord.treatment_time));
                     if (treatRecord.eating_time > 0){
                         treatData.put("preBolus", treatRecord.eating_time);
@@ -481,8 +491,6 @@ public class NightscoutUploader {
                         treatCollection.insert(eatData, WriteConcern.UNACKNOWLEDGED);
                         Log.w(TAG, "Eating data inserted");}
                     else{
-                        if (treatRecord.carbs != 0){
-                            treatData.put("carbs", treatRecord.carbs);}
                         Log.w(TAG, "Treatment data populated");
                         treatCollection.insert(treatData, WriteConcern.UNACKNOWLEDGED);
                         Log.w(TAG, "Treatment data inserted");

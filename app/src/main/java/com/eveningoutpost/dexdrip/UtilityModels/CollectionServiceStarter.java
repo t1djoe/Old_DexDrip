@@ -23,7 +23,16 @@ public class CollectionServiceStarter {
         }
         return false;
     }
-    
+
+    public static boolean isDexbridge(Context context) {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        String collection_method = prefs.getString("dex_collection_method", "Dexbridge");
+        if(collection_method.compareTo("Dexbridge") == 0) {
+            return true;
+        }
+        return false;
+    }
+
     public void start(Context context) {
         mContext = context;
 
@@ -45,7 +54,7 @@ public class CollectionServiceStarter {
     private void startBtWixelService() {
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.JELLY_BEAN_MR2) {
             mContext.startService(new Intent(mContext, DexCollectionService.class));
-    	}
+        }
     }
     private void stopBtWixelService() {
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.JELLY_BEAN_MR2) {
