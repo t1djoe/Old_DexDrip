@@ -21,6 +21,7 @@ import com.eveningoutpost.dexdrip.Models.Calibration;
 import com.eveningoutpost.dexdrip.Services.WixelReader;
 import com.eveningoutpost.dexdrip.UtilityModels.BgGraphBuilder;
 import com.eveningoutpost.dexdrip.UtilityModels.CollectionServiceStarter;
+import com.eveningoutpost.dexdrip.IOB_COB;
 
 import java.text.DecimalFormat;
 import java.util.Date;
@@ -60,6 +61,8 @@ public class Home extends Activity implements NavigationDrawerFragment.Navigatio
         PreferenceManager.setDefaultValues(this, R.xml.pref_data_sync, false);
         PreferenceManager.setDefaultValues(this, R.xml.pref_wifi, false);
 
+        CollectionServiceStarter collectionServiceStarter = new CollectionServiceStarter();
+        collectionServiceStarter.start(getApplicationContext());
 
         prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         checkEula();
@@ -81,8 +84,8 @@ public class Home extends Activity implements NavigationDrawerFragment.Navigatio
         super.onResume();
         checkEula();
 
-        CollectionServiceStarter collectionServiceStarter = new CollectionServiceStarter();
-        collectionServiceStarter.start(getApplicationContext());
+//        CollectionServiceStarter collectionServiceStarter = new CollectionServiceStarter();
+//        collectionServiceStarter.start(getApplicationContext());
 
         _broadcastReceiver = new BroadcastReceiver() {
             @Override
@@ -175,9 +178,7 @@ public class Home extends Activity implements NavigationDrawerFragment.Navigatio
         final TextView notificationText = (TextView)findViewById(R.id.notices);
         notificationText.setText("");
         boolean isBTWixel = CollectionServiceStarter.isBTWixel(getApplicationContext());
-        Log.w("isBTWixel " + isBTWixel, "MESSAGE");
         boolean isDexbridge = CollectionServiceStarter.isDexbridge(getApplicationContext());
-        Log.w("isDexbridge " + isDexbridge, "MESSAGE");
         if(((isBTWixel || isDexbridge) && ActiveBluetoothDevice.first() != null) || ((!isBTWixel || !isDexbridge) && WixelReader.IsConfigured(getApplicationContext()))) {
             if (Sensor.isActive() && (Sensor.currentSensor().started_at + (60000 * 60 * 2)) < new Date().getTime()) {
                 if (BgReading.latest(2).size() > 1) {
@@ -206,11 +207,9 @@ public class Home extends Activity implements NavigationDrawerFragment.Navigatio
                 } else {
                     notificationText.setText("Your device has to be android 4.3 and up to support Bluetooth wixel");
                 }
-            }
-            if (!isBTWixel){
-                if (!isDexbridge){
+            }else{
                     notificationText.setText("First configure your wifi wixel reader ip addresses");
-            }}
+            }
         }
         mNavigationDrawerFragment = (NavigationDrawerFragment) getFragmentManager().findFragmentById(R.id.navigation_drawer);
         mNavigationDrawerFragment.setUp(R.id.navigation_drawer, (DrawerLayout) findViewById(R.id.drawer_layout), menu_name, this);
@@ -229,15 +228,17 @@ public class Home extends Activity implements NavigationDrawerFragment.Navigatio
         final TextView currentBgValueText = (TextView)findViewById(R.id.currentBgValueRealTime);
         final TextView notificationText = (TextView)findViewById(R.id.notices);
         final TextView currentWixelBatteryText = (TextView) findViewById(R.id.currentWixelBattery);
+        final TextView displayIOB = (TextView) findViewById(R.id.iob);
+        final TextView displayCOB = (TextView) findViewById(R.id.cob);
+
         if ((currentBgValueText.getPaintFlags() & Paint.STRIKE_THRU_TEXT_FLAG) > 0) {
             currentBgValueText.setPaintFlags(currentBgValueText.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
         }
-        BgReading lastBgreading = BgReading.lastNoSenssor();
-        if (Math.round(((float) lastBgreading.wixel_battery_level - 3040)/260*100) > 0){
-            currentWixelBatteryText.setText("Bridge Power: " + Math.round(((float) lastBgreading.wixel_battery_level - 3040)/260*100) + "%");}
+        BgReading lastBgreading = BgReading.lastNoSensor();
+        if (Math.round((float) lastBgreading.sensor.wixel_battery_level) > 0){
+            currentWixelBatteryText.setText("Bridge Power: " + Math.round((float) lastBgreading.sensor.wixel_battery_level) + "%");}
         else{
             currentWixelBatteryText.setText("Bridge Power: 0%");}
-        Log.d("Wix Batt:", Integer.toString(lastBgreading.wixel_battery_level));
         if (lastBgreading != null) {
             double estimate = 0;
             if ((new Date().getTime()) - (60000 * 11) - lastBgreading.timestamp > 0) {

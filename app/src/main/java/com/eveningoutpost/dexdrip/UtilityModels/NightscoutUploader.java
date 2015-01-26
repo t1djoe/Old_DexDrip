@@ -262,6 +262,10 @@ public class NightscoutUploader {
                 }
             }
 
+            String treatPostURL = baseURL + "treatments";
+            Log.i(TAG, "treatPostURL: " + treatPostURL);
+            HttpPost treatPost = new HttpPost(treatPostURL);
+
             if (apiVersion >= 1) {
                 for (Treatments treatmentRecord : treatmentRecords) {
                     Log.i(TAG, "treatmentRecord REST Upload");
@@ -281,16 +285,16 @@ public class NightscoutUploader {
                     try {
                         StringEntity se = new StringEntity(jsonString);
                         Log.i(TAG, "Stringentity se" + se);
-                        post.setEntity(se);
-                        Log.i(TAG, "post.setEntity");
-                        post.setHeader("Accept", "application/json");
-                        Log.i(TAG, "post.setHeader Accept");
-                        post.setHeader("Content-type", "application/json");
-                        Log.i(TAG, "post.setHeader Content-type");
+                        treatPost.setEntity(se);
+                        Log.i(TAG, "treatPost.setEntity");
+                        treatPost.setHeader("Accept", "application/json");
+                        Log.i(TAG, "treatPost.setHeader Accept");
+                        treatPost.setHeader("Content-type", "application/json");
+                        Log.i(TAG, "treatPost.setHeader Content-type");
 
                         ResponseHandler responseHandler = new BasicResponseHandler();
                         Log.i(TAG, "responseHandler");
-                        httpclient.execute(post, responseHandler);
+                        httpclient.execute(treatPost, responseHandler);
                         Log.i(TAG, "post.setHeader Accept");
                     } catch (Exception e) {
                         Log.w(TAG, "Unable to post treatment data");
@@ -307,7 +311,7 @@ public class NightscoutUploader {
     }
 
     private void populateV1APIBGEntry(JSONObject json, BgReading record) throws Exception {
-        SimpleDateFormat format = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss a");
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.sss");
         format.setTimeZone(TimeZone.getDefault());
         json.put("device", "dexcom");
         json.put("date", record.timestamp);
@@ -321,7 +325,7 @@ public class NightscoutUploader {
     }
 
     private void populateLegacyAPIEntry(JSONObject json, BgReading record) throws Exception {
-        SimpleDateFormat format = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss a");
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.sss");
         format.setTimeZone(TimeZone.getDefault());
         json.put("device", "dexcom");
         json.put("date", record.timestamp);
@@ -331,7 +335,7 @@ public class NightscoutUploader {
     }
 
     private void populateV1APIMeterReadingEntry(JSONObject json, Calibration record) throws Exception {
-        SimpleDateFormat format = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss a");
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.sss");
         format.setTimeZone(TimeZone.getDefault());
         json.put("device", "dexcom");
         json.put("type", "mbg");
@@ -341,7 +345,7 @@ public class NightscoutUploader {
     }
 
     private void populateV1APICalibrationEntry(JSONObject json, Calibration record) throws Exception {
-        SimpleDateFormat format = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss a");
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.sss");
         format.setTimeZone(TimeZone.getDefault());
 
         json.put("device", "dexcom");

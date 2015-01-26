@@ -48,7 +48,6 @@ public class TreatmentDataTable extends ListActivity implements NavigationDrawer
                 cursor,
                 new String[] { "event_type", "bg", "reading_type", "carbs", "insulin", "eating_time", "notes", "entered_by", "treatment_time" },
                 new int[] { R.id.event_type, R.id.bg, R.id.reading_type, R.id.carbs, R.id.insulin, R.id.eating_time, R.id.notes, R.id.entered_by, R.id.treatment_time });
-        Log.w("this", "MESSAGE");
         this.setListAdapter(adapter);
     }
 

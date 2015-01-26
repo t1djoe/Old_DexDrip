@@ -202,7 +202,7 @@ public class DexCollectionService extends Service {
         final long time_delay = calendar.getTimeInMillis() + 20000;
         AlarmManager alarm = (AlarmManager)getSystemService(ALARM_SERVICE);
         alarm.set(alarm.RTC_WAKEUP, time_delay, PendingIntent.getService(this, 0, new Intent(this, DexCollectionService.class), 0));
-        Log.i(TAG, "Retry set for" +  ((time_delay - (int) (new Date().getTime())) / (60000)) + "mins from now!");
+        Log.i(TAG, "Retry set for" +  ((time_delay - (calendar.getTimeInMillis())) / (60000)) + "mins from now!");
     }
 
     private final BluetoothGattCallback mGattCallback;
@@ -438,7 +438,7 @@ public class DexCollectionService extends Service {
     public void setSerialDataToTransmitterRawData(byte[] buffer, int len) {
 
         Log.i(TAG, "setSerialDataToTransmitterRawData received some data!");
-        if (PreferenceManager.getDefaultSharedPreferences(this).getString("dex_collection_method", "Dexbridge").compareTo("Dexbridge") ==0) {
+        if (PreferenceManager.getDefaultSharedPreferences(this).getString("dex_collection_method", "Dexbridge").compareTo("Dexbridge") == 0) {
             Log.i(TAG, "setSerialDataToTransmitterRawData -Dealing with Dexbridge packet!");
             int DexSrc;
             int TransmitterID;
@@ -477,7 +477,7 @@ public class DexCollectionService extends Service {
                     txidMessage.put(1, (byte) 0x01);
                     txidMessage.putInt(2, TransmitterID);
                     sendBtMessage(txidMessage);
-                }
+            }
                 //All is OK, so process it.
                 //first, tell the wixel it is OK to sleep.
                 Log.d(TAG,"Sending Data packet Ack, to put wixel to sleep");
@@ -493,6 +493,7 @@ public class DexCollectionService extends Service {
             if (sensor != null) {
                 BgReading bgReading = BgReading.create(transmitterData.raw_data, this);
                 sensor.latest_battery_level = transmitterData.sensor_battery_level;
+                sensor.wixel_battery_level = transmitterData.wixel_battery_level;
                 sensor.save();
             } else {
                 Log.i(TAG, "No Active Sensor, Data only stored in Transmitter Data");

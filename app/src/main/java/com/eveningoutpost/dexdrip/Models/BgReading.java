@@ -88,10 +88,6 @@ public class BgReading extends Model {
     @Column(name = "rc")
     public double rc;
 
-
-    @Column(name = "wixel_battery_level")
-    public int wixel_battery_level;
-
     @Expose
     @Column(name = "uuid", index = true)
     public String uuid;
@@ -103,6 +99,10 @@ public class BgReading extends Model {
     @Expose
     @Column(name = "sensor_uuid", index = true)
     public String sensor_uuid;
+
+
+    @Column(name = "wixel_battery_level")
+    public int wixel_battery_level;
 
     @Column(name = "synced")
     public boolean synced;
@@ -137,14 +137,14 @@ public class BgReading extends Model {
     }
 
     public static double activeSlope() {
-        BgReading bgReading = BgReading.lastNoSenssor();
+        BgReading bgReading = BgReading.lastNoSensor();
         double slope = (2 * bgReading.a * (new Date().getTime() + BESTOFFSET)) + bgReading.b;
         Log.w(TAG, "ESTIMATE SLOPE" + slope);
         return slope;
     }
 
     public static double activePrediction() {
-        BgReading bgReading = BgReading.lastNoSenssor();
+        BgReading bgReading = BgReading.lastNoSensor();
         if (bgReading != null) {
             double currentTime = new Date().getTime();
             if (currentTime >=  bgReading.timestamp + (60000 * 7)) { currentTime = bgReading.timestamp + (60000 * 7); }
@@ -168,6 +168,7 @@ public class BgReading extends Model {
                 bgReading.uuid = UUID.randomUUID().toString();
                 bgReading.time_since_sensor_started = bgReading.timestamp - sensor.started_at;
                 bgReading.synced = false;
+                bgReading.wixel_battery_level = sensor.wixel_battery_level;
                 bgReading.calibration_flag = false;
 
                 //TODO: THIS IS A BIG SILLY IDEA, THIS WILL HAVE TO CHANGE ONCE WE GET SOME REAL DATA FROM THE START OF SENSOR LIFE
@@ -192,6 +193,7 @@ public class BgReading extends Model {
                 bgReading.uuid = UUID.randomUUID().toString();
                 bgReading.time_since_sensor_started = bgReading.timestamp - sensor.started_at;
                 bgReading.synced = false;
+                bgReading.wixel_battery_level = sensor.wixel_battery_level;
 
                 //TODO: THIS IS A BIG SILLY IDEA, THIS WILL HAVE TO CHANGE ONCE WE GET SOME REAL DATA FROM THE START OF SENSOR LIFE
                 double adjust_for = (86400000 * 1.9) - bgReading.time_since_sensor_started;
@@ -287,7 +289,7 @@ public class BgReading extends Model {
                 .execute();
     }
 
-    public static BgReading lastNoSenssor() {
+    public static BgReading lastNoSensor() {
         return new Select()
                 .from(BgReading.class)
                 .orderBy("_ID desc")
@@ -479,7 +481,7 @@ public class BgReading extends Model {
             save();
         } else {
             Log.w(TAG, "Not enough data to calculate parabolic rates - assume static data");
-            BgReading latest_entry = BgReading.lastNoSenssor();
+            BgReading latest_entry = BgReading.lastNoSensor();
             ra = 0;
             rb = 0;
             rc = latest_entry.age_adjusted_raw_value;
