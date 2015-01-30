@@ -26,23 +26,24 @@ public class TransmitterData extends Model {
 
     @Column(name = "raw_data")
     public double raw_data;
-//
-//    @Column(name = "filtered_data")
-//    public double filtered_data;
+
+    @Column(name = "filtered_data")
+    public double filtered_data;
 
     @Column(name = "sensor_battery_level")
     public int sensor_battery_level;
 
-    @Column(name = "uuid", index = true)
-    public String uuid;
-
-
     @Column(name = "wixel_battery_level")
     public int wixel_battery_level;
 
+    @Column(name = "uuid", index = true)
+    public String uuid;
+
     public static TransmitterData create(byte[] buffer, int len) {
-        if (len < 6) { return null; };
-        if (buffer[0] == 0x10 && buffer[1] == 0x00) {
+        if (len < 6) { return null; }
+        Log.w(TAG, "buffer[0]: " + buffer[0]);
+        Log.w(TAG, "buffer[1]: " + buffer[1]);
+        if (buffer[0] == 0x11 && buffer[1] == 0x00) {
             //this is a dexbridge packet.  Process accordingly.
             Log.w(TAG, "create Processing a Dexbridge packet");
             ByteBuffer txData = ByteBuffer.allocate(len);
@@ -50,13 +51,16 @@ public class TransmitterData extends Model {
             txData.put(buffer, 0, len);
             TransmitterData transmitterData = new TransmitterData();
             transmitterData.raw_data = txData.getInt(2);
+            transmitterData.filtered_data =txData.getInt(6);
             transmitterData.sensor_battery_level = txData.getShort(10);
-            transmitterData.wixel_battery_level = txData.get(11);
+            transmitterData.wixel_battery_level = (txData.get(11)) & 0xff;
+            Log.i(TAG, "Wix Batt: " + transmitterData.wixel_battery_level);
             transmitterData.timestamp = new Date().getTime();
             transmitterData.uuid = UUID.randomUUID().toString();
 
             transmitterData.save();
-            Log.w(TAG, "Created transmitterData record with Raw value of " + transmitterData.raw_data + " at " +transmitterData.timestamp);
+            //Log.w(TAG, "Created transmitterData record with Raw value of " + transmitterData.raw_data + " at " +transmitterData.timestamp);
+            Log.w(TAG, "Created transmitterData record with Raw value of " + transmitterData.raw_data + " and Filtered value of " + transmitterData.filtered_data+ " at " +transmitterData.timestamp);
             return transmitterData;
         } else {
             //this is NOT a dexbridge packet.  Process accordingly.
@@ -87,6 +91,7 @@ public class TransmitterData extends Model {
              */
             transmitterData.raw_data = Integer.parseInt(data[0]);
             transmitterData.wixel_battery_level = Integer.parseInt(data[2]);
+            // transmitterData.filtered_data = 0;
             transmitterData.timestamp = new Date().getTime();
             transmitterData.uuid = UUID.randomUUID().toString();
 
@@ -120,7 +125,7 @@ public class TransmitterData extends Model {
                 .executeSingle();
     }
 
-    public static void randomDelay(float min, float max){
+/*    public static void randomDelay(float min, float max){
         int random = (int)(max * Math.random() + min);
         try {
             Log.d("Sleeping ", "for " + random + "ms");
@@ -128,14 +133,5 @@ public class TransmitterData extends Model {
         } catch (InterruptedException e) {
             Log.e("Random Delay ", "INTERUPTED");
         }
-    }
-
-    public static short swap (short value){
-        int b1 = (value & 0x0f) >> 0;
-        int b2 = (value & 0x0f)>> 4;
-
-        return (short) ((b1 << 4 | b2 << 0 ) & 0xff);
-    }
-
+    }*/
 }
-

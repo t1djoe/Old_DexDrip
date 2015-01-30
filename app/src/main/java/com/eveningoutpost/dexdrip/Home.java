@@ -21,7 +21,6 @@ import com.eveningoutpost.dexdrip.Models.Calibration;
 import com.eveningoutpost.dexdrip.Services.WixelReader;
 import com.eveningoutpost.dexdrip.UtilityModels.BgGraphBuilder;
 import com.eveningoutpost.dexdrip.UtilityModels.CollectionServiceStarter;
-import com.eveningoutpost.dexdrip.IOB_COB;
 
 import java.text.DecimalFormat;
 import java.util.Date;
@@ -222,6 +221,8 @@ public class Home extends Activity implements NavigationDrawerFragment.Navigatio
     }
 
     public void displayCurrentInfo() {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        boolean predictBG = prefs.getBoolean("predictBG", false);
         DecimalFormat df = new DecimalFormat("#");
         df.setMaximumFractionDigits(0);
 
@@ -243,11 +244,21 @@ public class Home extends Activity implements NavigationDrawerFragment.Navigatio
             double estimate = 0;
             if ((new Date().getTime()) - (60000 * 11) - lastBgreading.timestamp > 0) {
                 notificationText.setText("Signal Missed");
-                estimate = BgReading.estimated_bg(lastBgreading.timestamp + (6000 * 7));
+                if(!predictBG){
+                    currentBgValueText.setText(bgGraphBuilder.unitized_string(BgReading.activePrediction()));
+                    estimate=lastBgreading.calculated_value;
+
+                } else {
+                    estimate = BgReading.estimated_bg(lastBgreading.timestamp + (6000 * 7));
+                }
                 currentBgValueText.setText(bgGraphBuilder.unitized_string(BgReading.activePrediction()));
                 currentBgValueText.setPaintFlags(currentBgValueText.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
             } else {
-                if (lastBgreading != null) {
+                if(!predictBG){
+                    estimate=lastBgreading.calculated_value;
+                    String stringEstimate = bgGraphBuilder.unitized_string(estimate);
+                    currentBgValueText.setText( stringEstimate + " " + BgReading.slopeArrow(lastBgreading.staticSlope()));
+                } else {
                     estimate = BgReading.activePrediction();
                     String stringEstimate = bgGraphBuilder.unitized_string(estimate);
                     currentBgValueText.setText( stringEstimate + " " + BgReading.slopeArrow());
