@@ -1,4 +1,4 @@
-package com.eveningoutpost.dexdrip;
+    package com.eveningoutpost.dexdrip;
 
 import android.app.Activity;
 import android.content.BroadcastReceiver;
@@ -60,9 +60,6 @@ public class Home extends Activity implements NavigationDrawerFragment.Navigatio
         PreferenceManager.setDefaultValues(this, R.xml.pref_data_sync, false);
         PreferenceManager.setDefaultValues(this, R.xml.pref_wifi, false);
 
-        CollectionServiceStarter collectionServiceStarter = new CollectionServiceStarter();
-        collectionServiceStarter.start(getApplicationContext());
-
         prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         checkEula();
         setContentView(R.layout.activity_home);
@@ -83,8 +80,8 @@ public class Home extends Activity implements NavigationDrawerFragment.Navigatio
         super.onResume();
         checkEula();
 
-//        CollectionServiceStarter collectionServiceStarter = new CollectionServiceStarter();
-//        collectionServiceStarter.start(getApplicationContext());
+        CollectionServiceStarter collectionServiceStarter = new CollectionServiceStarter();
+        collectionServiceStarter.start(getApplicationContext());
 
         _broadcastReceiver = new BroadcastReceiver() {
             @Override
@@ -221,8 +218,6 @@ public class Home extends Activity implements NavigationDrawerFragment.Navigatio
     }
 
     public void displayCurrentInfo() {
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        boolean predictBG = prefs.getBoolean("predictBG", false);
         DecimalFormat df = new DecimalFormat("#");
         df.setMaximumFractionDigits(0);
 
@@ -236,6 +231,7 @@ public class Home extends Activity implements NavigationDrawerFragment.Navigatio
             currentBgValueText.setPaintFlags(currentBgValueText.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
         }
         BgReading lastBgreading = BgReading.lastNoSensor();
+        boolean predictive = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getBoolean("predictive_bg", false);
         if (Math.round((float) lastBgreading.sensor.wixel_battery_level) > 0){
             currentWixelBatteryText.setText("Bridge Power: " + Math.round((float) lastBgreading.sensor.wixel_battery_level) + "%");}
         else{
@@ -244,17 +240,15 @@ public class Home extends Activity implements NavigationDrawerFragment.Navigatio
             double estimate = 0;
             if ((new Date().getTime()) - (60000 * 11) - lastBgreading.timestamp > 0) {
                 notificationText.setText("Signal Missed");
-                if(!predictBG){
-                    currentBgValueText.setText(bgGraphBuilder.unitized_string(BgReading.activePrediction()));
+                if(!predictive){
                     estimate=lastBgreading.calculated_value;
-
                 } else {
                     estimate = BgReading.estimated_bg(lastBgreading.timestamp + (6000 * 7));
                 }
-                currentBgValueText.setText(bgGraphBuilder.unitized_string(BgReading.activePrediction()));
+                currentBgValueText.setText(bgGraphBuilder.unitized_string(estimate));
                 currentBgValueText.setPaintFlags(currentBgValueText.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
             } else {
-                if(!predictBG){
+                if(!predictive){
                     estimate=lastBgreading.calculated_value;
                     String stringEstimate = bgGraphBuilder.unitized_string(estimate);
                     currentBgValueText.setText( stringEstimate + " " + BgReading.slopeArrow(lastBgreading.staticSlope()));
